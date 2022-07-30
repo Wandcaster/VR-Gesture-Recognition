@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f135f9a8b03ae648943c544f85bd87c, type: 3}
-  m_Name: Gesture1
+  m_Name: Gesture2
   m_EditorClassIdentifier: 
-  gestureName: gesture1
-  gestureImage: {fileID: 2800000, guid: a543439543c3ccc47a961e2a58141f4d, type: 3}
+  gestureName: S
+  gestureImage: {fileID: 2800000, guid: 354600de68c53814fac3dd0f288cb780, type: 3}
   tempGestureImage: {fileID: 0}

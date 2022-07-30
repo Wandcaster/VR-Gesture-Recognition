@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class RecognizeOutput
@@ -18,7 +20,7 @@ public class GestureManager : MonoBehaviour
     [SerializeField]
     List<Gesture> gestureDatabase;
     
-    public RecognizeOutput RecognizeGesture(Gesture gestureToRecognize)
+    public List<RecognizeOutput> RecognizeGesture(Gesture gestureToRecognize)
     {
         List<RecognizeOutput> output = new List<RecognizeOutput>();
         foreach (var gesture in gestureDatabase)
@@ -29,25 +31,19 @@ public class GestureManager : MonoBehaviour
             {
                 for (int j = 0; j < Gesture.imageSize; j++)
                 {
-                    if (gesture.points[i, j] == 1 && gestureToRecognize.points[i, j] == 1)
+                    if (gesture.points[i, j] == gestureToRecognize.points[i, j])
                     {
                         identicalPoints++;
                     }
                 }
             }
-            tempOutput.probability = identicalPoints / gestureToRecognize.pointsCount;
+            tempOutput.probability = identicalPoints / math.pow(Gesture.imageSize,2);
             output.Add(tempOutput);
         }
-        float greatestProbability = 0;
-        RecognizeOutput recognizeOutput=null;
-        foreach (var item in output)
+        output.Sort(delegate (RecognizeOutput x, RecognizeOutput y)
         {
-            if (item.probability > greatestProbability)
-            {
-                greatestProbability = item.probability;
-                recognizeOutput = item;
-            }
-        }
-        return recognizeOutput;
+            return y.probability.CompareTo(x.probability);
+        });
+        return output;
     }
 }

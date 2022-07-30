@@ -16,37 +16,48 @@ public class Gesture :MonoBehaviour
     public int[,] points
     {
         get { return gestureData.points; }
-        set { gestureData.points = value; }
+        set { gestureData.points = value; gestureData.tempGestureImage = GetTexture2DFromPoints(value); }
     }
     public Texture2D gestureImage
     {
-        get { return gestureData.gestureImage; }
-        set { gestureData.gestureImage = value; }
-    }
-    public int pointsCount
-    {
-        get { return gestureData.pointsCount; }
-        set { gestureData.pointsCount = value; }
+        get { return gestureData.tempGestureImage; }
+        set { gestureData.tempGestureImage = value; gestureData.points = GetPointsFromTexture(value); }
     }
 
-    public static int imageSize=8;
+    public static int imageSize=200;
     public Gesture(string gestureName, int[,] points)
     {
+        gestureData = ScriptableObject.CreateInstance("GestureData") as GestureData;
         this.gestureName = gestureName;
         this.points = points;
-        gestureImage= CreateTexture2D();
-        pointsCount = CalculatePointNumber();
+        gestureImage= GetTexture2DFromPoints(points);   
+        gestureData.Init();
+        gestureImage.filterMode = FilterMode.Point;
+    }
+    public Gesture(string gestureName, Texture2D gestureImage)
+    {
+        gestureData = ScriptableObject.CreateInstance("GestureData") as GestureData; 
+        this.gestureName = gestureName;
+        this.gestureImage = gestureImage;
+        gestureData.Init();
+        gestureImage.filterMode = FilterMode.Point;
+        points = GetPointsFromTexture(gestureImage);
     }
 
-    public Texture2D CreateTexture2D()
+    public Texture2D GetTexture2DFromPoints(int[,] points)
     {
-        Texture2D output = new Texture2D(imageSize, imageSize);
+        Texture2D output= new Texture2D(imageSize,imageSize,gestureImage.format,false);
+        Debug.Log(gestureImage.format);
         output.filterMode=FilterMode.Point;
         for (int i = 0; i < imageSize; i++)
         {
             for (int j = 0; j < imageSize; j++)
             {
                 if (points[i, j] == 1)
+                {
+                    output.SetPixel(i, j, Color.white);
+                }
+                else
                 {
                     output.SetPixel(i, j, Color.black);
                 }
@@ -57,15 +68,14 @@ public class Gesture :MonoBehaviour
     }
     public int[,] GetPointsFromTexture(Texture2D texture2D)
     {
-        int[,] output=new int[texture2D.width, texture2D.height];
+        int[,] output=new int[imageSize, imageSize];
 
-        for (int i = 0; i < texture2D.width; i++)
+        for (int i = 0; i < imageSize; i++)
         {
-            for (int j = 0; j < texture2D.height; j++)
+            for (int j = 0; j < imageSize; j++)
             {
-                if (texture2D.GetPixel(i, j).r == 1)
+                if (texture2D.GetPixel(i, j).r == 0)
                 {
-                    Debug.Log("black");
                     output[i, j] = 1;
                 }
             }
@@ -73,38 +83,21 @@ public class Gesture :MonoBehaviour
         return output;
     }
 
-    public void GetPointsFromTexture()
-    {
-        int[,] output = new int[gestureImage.width, gestureImage.height];
-
-        for (int i = 0; i < gestureImage.width; i++)
-        {
-            for (int j = 0; j < gestureImage.height; j++)
-            {
-                if (gestureImage.GetPixel(i, j).r == 1)
-                {
-                    Debug.Log("black");
-                    output[i, j] = 1;
-                }
-            }
-        }
-        points = output;
-    }   
     private void Start()
     {
-        gestureImage.filterMode = FilterMode.Point;
-        GetPointsFromTexture();
-        pointsCount = CalculatePointNumber();
+            gestureData.Init();
+            gestureImage.filterMode = FilterMode.Point;
+            if (gestureImage != null) points = GetPointsFromTexture(gestureImage);
     }
 
-    public int CalculatePointNumber()
+    public void Init(string gestureName, Texture2D gestureImage)
     {
-        int output = 0;
-        foreach (var item in points)
-        {
-            if (item == 1) output++;
-        }
-        return output;
+        gestureData = ScriptableObject.CreateInstance("GestureData") as GestureData;
+        this.gestureName = gestureName;
+        this.gestureImage = gestureImage;
+        gestureData.InitGestureImage();
+        gestureImage.filterMode = FilterMode.Point;
+        points = GetPointsFromTexture(gestureImage);
+        
     }
 }
-//PRzygotowaæ funkcje tworzenia punktów z zdjêcia 

@@ -13,11 +13,11 @@ public class Testing : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Gesture gesture=CreateRandomGesture("test");
+        ////Gesture gesture=CreateRandomGesture("test");
+        ////image.sprite = Sprite.Create(gesture.gestureImage, new Rect(0.0f, 0.0f, gesture.gestureImage.width, gesture.gestureImage.height), new Vector2(0.5f, 0.5f), 100);
+        //Gesture gesture = GetComponent<Gesture>();
+        //gesture.GetPointsFromTexture();
         //image.sprite = Sprite.Create(gesture.gestureImage, new Rect(0.0f, 0.0f, gesture.gestureImage.width, gesture.gestureImage.height), new Vector2(0.5f, 0.5f), 100);
-        Gesture gesture = GetComponent<Gesture>();
-        gesture.GetPointsFromTexture();
-        image.sprite = Sprite.Create(gesture.gestureImage, new Rect(0.0f, 0.0f, gesture.gestureImage.width, gesture.gestureImage.height), new Vector2(0.5f, 0.5f), 100);
     }
 
     private Gesture CreateRandomGesture(string GestureName)

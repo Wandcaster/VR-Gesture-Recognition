@@ -8,5 +8,15 @@ public class GestureData : ScriptableObject
     public string gestureName;
     public int[,] points;
     public Texture2D gestureImage;
-    public int pointsCount;
+    [HideInInspector]
+    public Texture2D tempGestureImage;
+    public void Init()
+    {
+        tempGestureImage = gestureImage;
+    }
+    public void InitGestureImage()
+    {
+        gestureImage = tempGestureImage;
+    }
+
 }
