@@ -11,13 +11,21 @@ public class GestureControllerEditor : Editor
         base.OnInspectorGUI();
         GestureController myScript = (GestureController)target;
 
-        if (GUILayout.Button("StartRecording"))
+        if (GUILayout.Button("Start Recording"))
         {
-            myScript.StartCoroutine(myScript.StartRecording());
+            myScript.StartRecording();
         }
-        if (GUILayout.Button("StopRecording"))
+        if (GUILayout.Button("Stop Recording"))
         {
             myScript.StopRecording();
+        }
+        if(GUILayout.Button("Draw Gesture"))
+        {
+            myScript.DrawGesture();
+        }
+        if(GUILayout.Button("Save draw to File"))
+        {
+            myScript.SaveGesture();
         }
     }
 }

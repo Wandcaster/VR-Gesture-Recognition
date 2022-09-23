@@ -4,13 +4,17 @@ using System.Collections;
 
 namespace Valve.VR.Extras
 {
+    public interface IOnClick
+    {
+        void OnClick();
+    }
+
     public class SteamVR_LaserPointer : MonoBehaviour
     {
         public SteamVR_Behaviour_Pose pose;
 
         //public SteamVR_Action_Boolean interactWithUI = SteamVR_Input.__actions_default_in_InteractUI;
         public SteamVR_Action_Boolean interactWithUI = SteamVR_Input.GetBooleanAction("InteractUI");
-
         public bool active = true;
         public Color color;
         public float thickness = 0.002f;
@@ -79,7 +83,10 @@ namespace Valve.VR.Extras
         public virtual void OnPointerClick(PointerEventArgs e)
         {
             if (PointerClick != null)
+            {
                 PointerClick(this, e);
+            }
+            if (e.target!=null && e.target.GetComponent<IOnClick>() != null) e.target.GetComponent<IOnClick>().OnClick();
         }
 
         public virtual void OnPointerOut(PointerEventArgs e)
@@ -105,7 +112,7 @@ namespace Valve.VR.Extras
 
             if (previousContact && previousContact != hit.transform)
             {
-                PointerEventArgs args = new PointerEventArgs();
+                PointerEventArgs args = new PointerEventArgs(); 
                 args.fromInputSource = pose.inputSource;
                 args.distance = 0f;
                 args.flags = 0;
@@ -132,7 +139,7 @@ namespace Valve.VR.Extras
                 dist = hit.distance;
             }
 
-            if (bHit && interactWithUI.GetStateUp(pose.inputSource))
+            if (bHit && interactWithUI.GetStateUp(pose.inputSource) || Input.GetMouseButtonDown(0))
             {
                 PointerEventArgs argsClick = new PointerEventArgs();
                 argsClick.fromInputSource = pose.inputSource;
@@ -142,7 +149,7 @@ namespace Valve.VR.Extras
                 OnPointerClick(argsClick);
             }
 
-            if (interactWithUI != null && interactWithUI.GetState(pose.inputSource))
+            if (interactWithUI != null && interactWithUI.GetState(pose.inputSource) || Input.GetMouseButton(0))
             {
                 pointer.transform.localScale = new Vector3(thickness * 5f, thickness * 5f, dist);
                 pointer.GetComponent<MeshRenderer>().material.color = clickColor;

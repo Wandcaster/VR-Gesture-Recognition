@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class Gesture :MonoBehaviour
+public class Gesture 
 {
     [SerializeField]
     private GestureData gestureData;
@@ -16,7 +14,7 @@ public class Gesture :MonoBehaviour
     public int[,] points
     {
         get { return gestureData.points; }
-        set { gestureData.points = value; gestureData.tempGestureImage = GetTexture2DFromPoints(value); }
+        set { gestureData.points = value; gestureData.tempGestureImage = GetTexture2DFromPoints(value);}
     }
     public Texture2D gestureImage
     {
@@ -36,14 +34,8 @@ public class Gesture :MonoBehaviour
     }
     public Gesture(string gestureName, Texture2D gestureImage)
     {
-        gestureData = ScriptableObject.CreateInstance("GestureData") as GestureData; 
-        this.gestureName = gestureName;
-        this.gestureImage = gestureImage;
-        gestureData.Init();
-        gestureImage.filterMode = FilterMode.Point;
-        points = GetPointsFromTexture(gestureImage);
+        Init(gestureName, gestureImage);
     }
-
     public Texture2D GetTexture2DFromPoints(int[,] points)
     {
         Texture2D output= new Texture2D(imageSize,imageSize,gestureImage.format,false);
@@ -82,14 +74,6 @@ public class Gesture :MonoBehaviour
         }
         return output;
     }
-
-    private void Start()
-    {
-            gestureData.Init();
-            gestureImage.filterMode = FilterMode.Point;
-            if (gestureImage != null) points = GetPointsFromTexture(gestureImage);
-    }
-
     public void Init(string gestureName, Texture2D gestureImage)
     {
         gestureData = ScriptableObject.CreateInstance("GestureData") as GestureData;
@@ -98,6 +82,5 @@ public class Gesture :MonoBehaviour
         gestureData.InitGestureImage();
         gestureImage.filterMode = FilterMode.Point;
         points = GetPointsFromTexture(gestureImage);
-        
     }
 }
