@@ -13,58 +13,25 @@ public class Gesture
     }
     public int[,] points
     {
-        get { return gestureData.points; }
-        set { gestureData.points = value; gestureData.tempGestureImage = GetTexture2DFromPoints(value);}
+        get { return gestureData.points;}
+        set { gestureData.points = value;}
     }
     public Texture2D gestureImage
     {
-        get { return gestureData.tempGestureImage; }
-        set { gestureData.tempGestureImage = value; gestureData.points = GetPointsFromTexture(value); }
-    }
-
-    public static int imageSize=200;
-    public Gesture(string gestureName, int[,] points)
-    {
-        gestureData = ScriptableObject.CreateInstance("GestureData") as GestureData;
-        this.gestureName = gestureName;
-        this.points = points;
-        gestureImage= GetTexture2DFromPoints(points);   
-        gestureData.Init();
-        gestureImage.filterMode = FilterMode.Point;
+        get { return gestureData.tempGestureImage;}
+        set { gestureData.tempGestureImage = value;}
     }
     public Gesture(string gestureName, Texture2D gestureImage)
     {
         Init(gestureName, gestureImage);
-    }
-    public Texture2D GetTexture2DFromPoints(int[,] points)
-    {
-        Texture2D output= new Texture2D(imageSize,imageSize,gestureImage.format,false);
-        Debug.Log(gestureImage.format);
-        output.filterMode=FilterMode.Point;
-        for (int i = 0; i < imageSize; i++)
-        {
-            for (int j = 0; j < imageSize; j++)
-            {
-                if (points[i, j] == 1)
-                {
-                    output.SetPixel(i, j, Color.white);
-                }
-                else
-                {
-                    output.SetPixel(i, j, Color.black);
-                }
-            }
-        }
-        output.Apply();
-        return output;
-    }
+    } 
     public int[,] GetPointsFromTexture(Texture2D texture2D)
     {
-        int[,] output=new int[imageSize, imageSize];
+        int[,] output=new int[texture2D.width, texture2D.height];
 
-        for (int i = 0; i < imageSize; i++)
+        for (int i = 0; i < texture2D.width; i++)
         {
-            for (int j = 0; j < imageSize; j++)
+            for (int j = 0; j < texture2D.height; j++)
             {
                 if (texture2D.GetPixel(i, j).r == 0)
                 {

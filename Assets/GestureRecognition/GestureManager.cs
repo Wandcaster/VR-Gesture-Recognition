@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Valve.VR;
@@ -29,9 +30,13 @@ public class GestureManager : MonoBehaviour
     [SerializeField]
     private SteamVR_Action_Boolean isRecording;
     [SerializeField]
-    private RawImage image;
+    private RawImage recognizedImage;
+    [SerializeField]
+    private RawImage createdImage;
+    [SerializeField]
+    TextMeshProUGUI PropabilityText;
 
-    [Header("Data")]
+    [Header("Data")]    
     public bool AddGestureMode;
     public List<Gesture> gestureDatabase;
     public List<RecognizeOutput> RecognizeGesture(Gesture gestureToRecognize)
@@ -42,9 +47,9 @@ public class GestureManager : MonoBehaviour
             int identicalPoints = 0;
             int pointNumber = 0;
             RecognizeOutput tempOutput = new RecognizeOutput(gesture, 0);
-            for (int i = 0; i < Gesture.imageSize; i++)
+            for (int i = 0; i < gesture.gestureImage.width; i++)
             {
-                for (int j = 0; j < Gesture.imageSize; j++)
+                for (int j = 0; j < gesture.gestureImage.height; j++)
                 {
                     if(gestureToRecognize.points[i, j] == 1)
                     {
@@ -97,7 +102,12 @@ public class GestureManager : MonoBehaviour
             }
             else
             {
-                image.texture=RecognizeGesture(gestureComponent)[0].recognizedGesture.gestureImage;
+                RecognizeOutput output = RecognizeGesture(gestureComponent)[0];
+                recognizedImage.texture= output.recognizedGesture.gestureImage;
+                createdImage.texture = gestureImage;
+                PropabilityText.text = "Propability: " + output.probability;
+
+
             }
         }
     }
