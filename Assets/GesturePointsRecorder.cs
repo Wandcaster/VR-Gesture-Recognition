@@ -22,16 +22,22 @@ public class GesturePointsRecorder : MonoBehaviour
     /// </summary>
     public IEnumerator StartCollectDataCorutine()
     {
-        Vector2 point= new Vector2();
-        spaceReferencePoint = new GameObject();
-        Transform spaceReferencePointTransform = spaceReferencePoint.transform;
         points.Clear();
-        spaceReferencePointTransform.position = trackingPoint.position;
-        points.Add(spaceReferencePointTransform.InverseTransformPoint(trackingPoint.position));
+        Vector3 startPosition = trackingPoint.position;
+        Vector3 point;
+        point = trackingPoint.position;
+        point -= startPosition;
+        point = Vector3.ProjectOnPlane(point,Camera.main.transform.forward);
+        point.x = point.x + point.z;
+        points.Add(new Vector2(point.x,point.y));
+
         while (true)
         {
-            if(spaceReferencePointTransform!=null) point = spaceReferencePointTransform.InverseTransformPoint(trackingPoint.position);
-            if (point != points[points.Count - 1]) points.Add(point);
+            point = trackingPoint.position;
+            point -= startPosition;
+            point = Vector3.ProjectOnPlane(point,Camera.main.transform.forward);
+            point.x = point.x+point.z;
+            if(new Vector2(point.x , point.y)!=points[points.Count-1])points.Add(new Vector2(point.x, point.y));
             yield return true;
         }
     }
@@ -49,5 +55,9 @@ public class GesturePointsRecorder : MonoBehaviour
     public void StartCollectData()
     {
         coroutine = StartCoroutine(StartCollectDataCorutine());
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawRay(new Ray(Camera.main.transform.position, Camera.main.transform.right));
     }
 }
