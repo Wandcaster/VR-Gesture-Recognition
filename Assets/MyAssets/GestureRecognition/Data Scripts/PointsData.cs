@@ -14,7 +14,6 @@ public class PointsData
     public float width { get; }
     public float height { get; }
     public Vector2 minPoint { get; }
-    public float scaleValue { get; }
     public Vector2Int expectedSize { get; }
 
     public PointsData(List<Vector2> points, int accuracy)

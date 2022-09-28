@@ -18,7 +18,6 @@ public class GesturePointsRecorder : MonoBehaviour
 
     /// <summary>
     /// Start collect point to the list 'points' every frame, skip point that the same like last recorded point.
-    /// Create temporary gameobject that is use to referece center transform of points, the temporary gameobject is destroyed in 'StopCollectData' function
     /// </summary>
     public IEnumerator StartCollectDataCorutine()
     {
@@ -59,5 +58,5 @@ public class GesturePointsRecorder : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawRay(new Ray(Camera.main.transform.position, Camera.main.transform.right));
-    }
+    }   
 }
