@@ -6,6 +6,11 @@ public class Gesture
 {
     [SerializeField]
     private GestureData gestureData;
+    public int gestureID
+    {
+        get { return gestureData.ID; }
+        set { gestureData.ID = value; }
+    }
     public string gestureName
     {
         get { return gestureData.gestureName; }

@@ -3,9 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Valve.VR;
 
+[Serializable]
+public class OnRecognition : UnityEvent<List<RecognizeOutput>> { }
 public class RecognizeOutput
 {
     public Gesture recognizedGesture;
@@ -39,6 +42,7 @@ public class GestureManager : MonoBehaviour
     [Header("Data")]    
     public bool AddGestureMode;
     public List<Gesture> gestureDatabase;
+    public OnRecognition OnRecognition;
     public List<RecognizeOutput> RecognizeGesture(Gesture gestureToRecognize)
     {
         List<RecognizeOutput> output = new List<RecognizeOutput>();
@@ -98,17 +102,26 @@ public class GestureManager : MonoBehaviour
             if (AddGestureMode)
             {
                 gestureDatabase.Add(gestureComponent);
+                SetGestureID();
                 gestureUIController.AddGestureToUI(gestureImage, gestureComponent);
             }
             else
             {
-                RecognizeOutput output = RecognizeGesture(gestureComponent)[0];
-                recognizedImage.texture= output.recognizedGesture.gestureImage;
+                List<RecognizeOutput> output = RecognizeGesture(gestureComponent);
+                RecognizeOutput result = RecognizeGesture(gestureComponent)[0];
+                recognizedImage.texture= result.recognizedGesture.gestureImage;
                 createdImage.texture = gestureImage;
-                PropabilityText.text = "Propability: " + output.probability;
-
-
+                PropabilityText.text = "Propability: " + result.probability;
+                OnRecognition.Invoke(output);
             }
+        }
+    }
+    public void SetGestureID()
+    {
+        int i = -1;
+        foreach (var item in gestureDatabase)
+        {
+            item.gestureID = i++;
         }
     }
 }

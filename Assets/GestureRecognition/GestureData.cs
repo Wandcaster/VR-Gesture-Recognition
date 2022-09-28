@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GestureData", menuName = "GestureManager/GestureData", order = 1)]
 public class GestureData : ScriptableObject
 {
+    public int ID;
     public string gestureName;
     public int[,] points;
     public List<int> pointsInInspector;
