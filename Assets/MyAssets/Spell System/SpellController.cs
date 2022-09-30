@@ -9,22 +9,30 @@ public class SpellController : MonoBehaviour
     [SerializeField]
     Transform spawnPoint;
     [SerializeField]
-    float scaleMultipler;
+    GameObject bulletPrefab;
+    GameObject bullet;
+    bool isShooted = false;
+    [SerializeField]
+    float distanceToActive;
     public void OnRecognition(List<RecognizeOutput> recognizeOutputs)
     {
-        GameObject temp = null;
-        if (recognizeOutputs[0].recognizedGesture.gestureID == 0)temp = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        else temp = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        ShootObject(temp);
+        //if (recognizeOutputs[0].recognizedGesture.gestureID != 0) return;
+        bullet = Instantiate(bulletPrefab, spawnPoint.position, Quaternion.identity, spawnPoint);
+        isShooted = false;
     }
 
-    private void ShootObject(GameObject temp)
+    private void ShootBullet(GameObject temp)
     {
-        temp.transform.position = spawnPoint.transform.position;
-        temp.transform.rotation = spawnPoint.transform.rotation;
-        temp.transform.localScale *= scaleMultipler;
-
-        Rigidbody rigidbody = (Rigidbody)temp.AddComponent(typeof(Rigidbody));
-        rigidbody.AddForce(spawnPoint.transform.forward * velocityMultipler);
+        temp.transform.parent = null;
+        temp.GetComponent<Rigidbody>().useGravity = true;
+        temp.GetComponent<Rigidbody>().AddForce(-spawnPoint.up * velocityMultipler);
+    }
+    private void Update()
+    {
+        if (bullet != null&& !isShooted && (Camera.main.transform.position-bullet.transform.position).magnitude > distanceToActive)
+        {
+            ShootBullet(bullet);
+            isShooted = true;
+        }
     }
 }
