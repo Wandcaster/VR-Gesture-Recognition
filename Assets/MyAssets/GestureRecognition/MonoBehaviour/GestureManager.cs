@@ -124,7 +124,7 @@ public class GestureManager : MonoBehaviour
 
     public void SetGestureID()
     {
-        int i = -1;
+        int i = 0;
         foreach (var item in gestureDatabase)
         {
             item.gestureID = i++;
