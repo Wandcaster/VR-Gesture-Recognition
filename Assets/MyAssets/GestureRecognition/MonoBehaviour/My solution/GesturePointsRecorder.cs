@@ -5,7 +5,7 @@ using UnityEngine;
 
 
 
-public class GesturePointsRecorder : MonoBehaviour
+public class GesturePointsRecorder :IGesturePointsRecorder
 {
     [SerializeField]
     private Transform trackingPoint;
@@ -45,13 +45,13 @@ public class GesturePointsRecorder : MonoBehaviour
     /// Stop Corutine and return Data
     /// </summary>
     /// <returns>PointData that contain information about points collected in recording gesture </returns>
-    public PointsData StopCollectData()
+    public override PointsData StopCollectData()
     {
         StopCoroutine(coroutine);
         Destroy(spaceReferencePoint);
         return new PointsData(points, accuracy);
     }
-    public void StartCollectData()
+    public override void StartCollectData()
     {
         coroutine = StartCoroutine(StartCollectDataCorutine());
     }

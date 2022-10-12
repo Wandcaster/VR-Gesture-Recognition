@@ -6,7 +6,7 @@ using System;
 using System.IO;
 using UnityEditor;
 
-public class DrawGestureController : MonoBehaviour
+public class DrawGestureController : IDrawGestureController
 {
     [SerializeField]
     int scaleXTarget=200;
@@ -15,7 +15,7 @@ public class DrawGestureController : MonoBehaviour
     [SerializeField]
     int boldValue=10;
     
-    public Texture2D DrawGesture(PointsData pointsData)
+    public override Texture2D DrawGesture(PointsData pointsData)
     {
         Texture2D output = new Texture2D(pointsData.expectedSize.x, pointsData.expectedSize.y, TextureFormat.RGBA32, false);
 
@@ -26,13 +26,13 @@ public class DrawGestureController : MonoBehaviour
                 if(pointsData.pointsAfterTransform[i,j]==1) output.SetPixel(i, j, Color.black);
             }
         }
-        output = boldLines(output);
+        output = BoldLines(output);
         output = ScaleTexture(output,scaleXTarget, scaleYTarget);
         output.Apply();
         return output;
     }
 
-    private Texture2D ScaleTexture(Texture2D source, int targetWidth, int targetHeight)
+    public override Texture2D ScaleTexture(Texture2D source, int targetWidth, int targetHeight)
     {
         Texture2D result = new Texture2D(targetWidth, targetHeight, source.format, true);
         Color[] rpixels = result.GetPixels(0);
@@ -47,21 +47,21 @@ public class DrawGestureController : MonoBehaviour
         return result;
     }
 
-    public void DrawLine(Texture2D t2D, Vector2 point1, Vector2 point2, Color col)
-    {
-        Vector2 t = point1;
-        float frac = 1 / Mathf.Sqrt(Mathf.Pow(point2.x - point1.x, 2) + Mathf.Pow(point2.y - point1.y, 2));
-        float ctr = 0;
+    //public void DrawLine(Texture2D t2D, Vector2 point1, Vector2 point2, Color col)
+    //{
+    //    Vector2 t = point1;
+    //    float frac = 1 / Mathf.Sqrt(Mathf.Pow(point2.x - point1.x, 2) + Mathf.Pow(point2.y - point1.y, 2));
+    //    float ctr = 0;
 
-        while ((int)t.x != (int)point2.x || (int)t.y != (int)point2.y)
-        {
-            t = Vector2.Lerp(point1, point2, ctr);
-            ctr += frac;
-            t2D.SetPixel((int)t.x, (int)t.y, col);
-        }
-    }
+    //    while ((int)t.x != (int)point2.x || (int)t.y != (int)point2.y)
+    //    {
+    //        t = Vector2.Lerp(point1, point2, ctr);
+    //        ctr += frac;
+    //        t2D.SetPixel((int)t.x, (int)t.y, col);
+    //    }
+    //}
 
-    public Texture2D boldLines(Texture2D texture)
+    public override Texture2D BoldLines(Texture2D texture)
     {
         List<Vector2Int> points = new List<Vector2Int>(); ;
         for (int i = 0; i < texture.width; i++)

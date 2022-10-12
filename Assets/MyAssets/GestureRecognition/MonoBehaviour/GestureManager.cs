@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Scripting;
 using UnityEngine.UI;
 using Valve.VR;
 
@@ -19,19 +20,22 @@ public class RecognizeOutput
         this.probability = probability;
     }
 }
-
 public class GestureManager : MonoBehaviour
 {
     public static GestureManager Instance { get; private set; }
-    [Header("Configuration")]
+    [Header("Components configuration")]
     [SerializeField]
-    private GesturePointsRecorder recorder;
+    private IGesturePointsRecorder gestureRecorder;
     [SerializeField]
-    private DrawGestureController drawController;
+    private IDrawGestureController drawController;
+    [SerializeField]
+    private IGestureRecognizer gestureRecognizer;
     [SerializeField]
     private GestureUIController gestureUIController;
+    [Header("Key configuration")]
     [SerializeField]
     private SteamVR_Action_Boolean isRecording;
+    [Header("UI configuration")]
     [SerializeField]
     private RawImage recognizedImage;
     [SerializeField]
@@ -42,39 +46,9 @@ public class GestureManager : MonoBehaviour
     [Header("Data")]    
     public bool AddGestureMode;
     public List<Gesture> gestureDatabase;
+    [Header("Events")]
     public OnRecognition OnRecognition;
-    public List<RecognizeOutput> RecognizeGesture(Gesture gestureToRecognize)
-    {
-        List<RecognizeOutput> output = new List<RecognizeOutput>();
-        foreach (var gesture in gestureDatabase)
-        {
-            int identicalPoints = 0;
-            int pointNumber = 0;
-            RecognizeOutput tempOutput = new RecognizeOutput(gesture, 0);
-            for (int i = 0; i < gesture.gestureImage.width; i++)
-            {
-                for (int j = 0; j < gesture.gestureImage.height; j++)
-                {
-                    if(gestureToRecognize.points[i, j] == 1)
-                    {
-                        pointNumber++;
-                        if (gesture.points[i, j] == gestureToRecognize.points[i, j])
-                        {
-                            identicalPoints++;
-                        }
-                    }
-                    
-                }
-            }
-            tempOutput.probability = identicalPoints / (float)pointNumber;
-            output.Add(tempOutput);
-        }
-        output.Sort(delegate (RecognizeOutput x, RecognizeOutput y)
-        {
-            return y.probability.CompareTo(x.probability);
-        });
-        return output;
-    }
+    
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -90,15 +64,13 @@ public class GestureManager : MonoBehaviour
     {
         if (isRecording.lastStateDown || Input.GetKeyDown("o"))
         {
-            Debug.Log("StartRecording");
-            recorder.StartCollectData();
+            gestureRecorder.StartCollectData();
         }
         if (isRecording.lastStateUp || Input.GetKeyDown("p"))
         {
-            PointsData pointsData = recorder.StopCollectData();
+            PointsData pointsData = gestureRecorder.StopCollectData();
             Texture2D gestureImage = drawController.DrawGesture(pointsData);
             Gesture gestureComponent = new Gesture("Gesture", gestureImage);
-
             if (AddGestureMode)
             {
                 gestureDatabase.Add(gestureComponent);
@@ -107,18 +79,18 @@ public class GestureManager : MonoBehaviour
             }
             else
             {
-                List<RecognizeOutput> output = RecognizeGesture(gestureComponent);
-                SetUI(gestureImage, gestureComponent);
+                List<RecognizeOutput> output = gestureRecognizer.RecognizeGesture(gestureComponent,ref gestureDatabase);
+                SetUI(output, gestureComponent);
                 OnRecognition.Invoke(output);
             }
         }
     }
 
-    private void SetUI(Texture2D gestureImage, Gesture gestureComponent)
+    private void SetUI(List<RecognizeOutput> recognizeOutput,Gesture gestureComponent)
     {
-        RecognizeOutput result = RecognizeGesture(gestureComponent)[0];
+        RecognizeOutput result = recognizeOutput[0];
         recognizedImage.texture = result.recognizedGesture.gestureImage;
-        createdImage.texture = gestureImage;
+        createdImage.texture = gestureComponent.gestureImage;
         PropabilityText.text = "Propability: " + result.probability;
     }
 

@@ -15,6 +15,7 @@ public class GestureUIItem : MonoBehaviour
     public void DestroyGestureUIItem()
     {
         GestureManager.Instance.gestureDatabase.Remove(gesture);
+        GestureManager.Instance.SetGestureID();
         Destroy(gameObject);
     }
 }
