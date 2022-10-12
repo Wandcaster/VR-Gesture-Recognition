@@ -1,18 +1,33 @@
+using OpenCvSharp;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OpenCvGestureRecognizer : MonoBehaviour
+public class OpenCvGestureRecognizer : IGestureRecognizer
 {
-    // Start is called before the first frame update
-    void Start()
+    public override List<RecognizeOutput> RecognizeGesture(Gesture gestureToRecognize, ref List<Gesture> gestureDatabase)
     {
-        
+        List<RecognizeOutput> output = new List<RecognizeOutput>();
+        foreach (var gesture in gestureDatabase)
+        {
+            double propability= CompareImages(gestureToRecognize.gestureImage, gesture.gestureImage);
+            output.Add(new RecognizeOutput(gesture, (float)propability));
+        }
+        output.Sort(delegate (RecognizeOutput x, RecognizeOutput y)
+        {
+            return y.probability.CompareTo(x.probability);
+        });
+        return output;
     }
-
-    // Update is called once per frame
-    void Update()
+    private double CompareImages(Texture2D texture0, Texture2D texture1)
     {
-        
+        Mat image0 = OpenCvSharp.Unity.TextureToMat(texture0);
+        Mat image1 = OpenCvSharp.Unity.TextureToMat(texture1);
+
+        int width = texture0.width;
+        int height = texture0.height;
+
+        double errorL2 = Cv2.Norm(image0, image1);
+        return 1 - errorL2 / (height * width);
     }
 }
