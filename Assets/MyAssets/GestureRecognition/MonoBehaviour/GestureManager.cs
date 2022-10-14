@@ -111,27 +111,17 @@ public class GestureManager : MonoBehaviour
 
     public void SaveDatabase(string path)
     {
-
         Directory.CreateDirectory(path + "/" + databaseName);
+
+        GestureDatabase temp = ScriptableObject.CreateInstance<GestureDatabase>();
+        temp.databaseName = databaseName;
+        AssetDatabase.CreateAsset(temp, path + "/" + databaseName + "/" + databaseName + ".asset");
+
         foreach (var item in gestureDatabase.gestures)
         {
-            item.Save(path + "/" + gestureDatabase.databaseName);
+            item.Save(path + "/" + databaseName,ref temp);
         }
-        if (AssetDatabase.Contains(gestureDatabase))
-        {
-            GestureDatabase temp = ScriptableObject.CreateInstance<GestureDatabase>();
-            EditorUtility.CopySerialized(gestureDatabase, temp);
-            temp.databaseName = databaseName;
-            AssetDatabase.CreateAsset(temp, path + "/" + gestureDatabase.databaseName + "/" + gestureDatabase.databaseName + ".asset");
-        }
-        else
-        {
-            GestureDatabase temp = ScriptableObject.CreateInstance<GestureDatabase>();
-            EditorUtility.CopySerialized(gestureDatabase, temp);
-            gestureDatabase = temp;
-            temp.databaseName = databaseName;
-            AssetDatabase.CreateAsset(temp, path + "/" + gestureDatabase.databaseName + "/" + gestureDatabase.databaseName + ".asset");
-        }
+
         
     }
     public void LoadDatabase(GestureDatabase gestureDatabase)

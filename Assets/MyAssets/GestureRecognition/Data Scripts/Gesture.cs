@@ -41,26 +41,17 @@ public class Gesture
         gestureImage.filterMode = FilterMode.Point;
         this.rawPoints = rawPoints;
     }
-    public void Save(string path)
+    public void Save(string path, ref GestureDatabase database)
     {
         path += "/" + gestureName;
         Directory.CreateDirectory(path);
         SaveImage(path);
-        if (AssetDatabase.Contains(gestureData))
-        {
-            GestureData temp = ScriptableObject.CreateInstance<GestureData>();
-            EditorUtility.CopySerialized(gestureData, temp);
-            AssetDatabase.CreateAsset(temp, path + "/" + gestureName + ".asset");
-        }
-        else
-        {
-            GestureData temp = ScriptableObject.CreateInstance<GestureData>();
-            EditorUtility.CopySerialized(gestureData, temp);
-            gestureData = temp;
-            AssetDatabase.CreateAsset(temp, path + "/" + gestureName + ".asset");
-        }
+        GestureData temp = ScriptableObject.CreateInstance<GestureData>();
+        EditorUtility.CopySerialized(gestureData, temp);
+        AssetDatabase.CreateAsset(temp, path + "/" + gestureName + ".asset");
         EditorUtility.FocusProjectWindow();
         Selection.activeObject = gestureData;
+        database.gestures.Add(new Gesture(temp));
     }
     private void SaveImage(string path)
     {
@@ -78,5 +69,9 @@ public class Gesture
         path = path.Remove(path.Length - 4, 4);
         gestureImage = Resources.Load<Texture2D>(path);
         Debug.Log(path);
+    }
+    public Gesture(GestureData gestureData)
+    {
+        this.gestureData = gestureData;
     }
 }

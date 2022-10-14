@@ -26,8 +26,5 @@ public class GestureUIItem : MonoBehaviour
     {
         gesture.gestureName = text;
     }
-    public void SaveGesture(string path)
-    {
-        gesture.Save(path);
-    }
+   
 }

@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f135f9a8b03ae648943c544f85bd87c, type: 3}
+  m_Name: Gesture
+  m_EditorClassIdentifier: 
+  ID: 0
+  gestureName: Gesture
+  points:
+  - {x: 0.0090532955, y: -0.0036369562}
+  - {x: 0.02346602, y: -0.019941628}
+  - {x: 0.05027875, y: -0.050536096}
+  - {x: 0.08016473, y: -0.08421415}
+  - {x: 0.11112079, y: -0.11361292}
+  - {x: 0.13791652, y: -0.13712868}
+  - {x: 0.15578213, y: -0.15519649}
+  - {x: 0.1652677, y: -0.16653088}
+  - {x: 0.16684645, y: -0.16812763}
+  - {x: 0.16999236, y: -0.17130965}
+  - {x: 0.17304343, y: -0.17612222}
+  - {x: 0.17695263, y: -0.16277853}
+  - {x: 0.18120152, y: -0.1409525}
+  - {x: 0.1851113, y: -0.1256651}
+  - {x: 0.1963169, y: -0.08787912}
+  - {x: 0.20358583, y: -0.06364483}
+  - {x: 0.2089216, y: -0.0462873}
+  - {x: 0.21233508, y: -0.039334863}
+  gestureImage: {fileID: 2800000, guid: e0f95cc1acd350b49a29c42bb8ecbe28, type: 3}
