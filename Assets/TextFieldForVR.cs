@@ -4,13 +4,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Valve.VR.Extras;
-
+[RequireComponent(typeof(BoxCollider))]
 public class TextFieldForVR : MonoBehaviour, IOnClick
 {
-    public void OnClick()
+    public void OnClick(PointerEventArgs e)
     {
+        Debug.Log(e.target.name);
         GetComponent<TMP_InputField>().Select();
-        Debug.Log("Click");
     }
 
     // Start is called before the first frame update

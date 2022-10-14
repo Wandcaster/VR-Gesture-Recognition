@@ -26,8 +26,8 @@ public class Gesture
     }
     public Texture2D gestureImage
     {
-        get { return gestureData.tempGestureImage;}
-        set { gestureData.tempGestureImage = value;}
+        get { return gestureData.gestureImage;}
+        set { gestureData.gestureImage = value;}
     }
     public Gesture(string gestureName, Texture2D gestureImage, List<Vector2> rawPoints)
     {
@@ -38,22 +38,45 @@ public class Gesture
         gestureData = ScriptableObject.CreateInstance("GestureData") as GestureData;
         this.gestureName = gestureName;
         this.gestureImage = gestureImage;
-        gestureData.InitGestureImage();
         gestureImage.filterMode = FilterMode.Point;
         this.rawPoints = rawPoints;
     }
     public void Save(string path)
     {
-        DirectoryInfo info=Directory.CreateDirectory(path);
-        Debug.Log(info.Exists);
-        //AssetDatabase.CreateAsset(gestureData, path + ".asset");
-        //SaveImage(path);
-        //EditorUtility.FocusProjectWindow();
-        //Selection.activeObject = gestureData;
+        path += "/" + gestureName;
+        Directory.CreateDirectory(path);
+        SaveImage(path);
+        if (AssetDatabase.Contains(gestureData))
+        {
+            GestureData temp = ScriptableObject.CreateInstance<GestureData>();
+            EditorUtility.CopySerialized(gestureData, temp);
+            AssetDatabase.CreateAsset(temp, path + "/" + gestureName + ".asset");
+        }
+        else
+        {
+            GestureData temp = ScriptableObject.CreateInstance<GestureData>();
+            EditorUtility.CopySerialized(gestureData, temp);
+            gestureData = temp;
+            AssetDatabase.CreateAsset(temp, path + "/" + gestureName + ".asset");
+        }
+        EditorUtility.FocusProjectWindow();
+        Selection.activeObject = gestureData;
     }
     private void SaveImage(string path)
     {
         byte[] bytes = ImageConversion.EncodeArrayToPNG(gestureImage.GetRawTextureData(), gestureImage.graphicsFormat, (uint)gestureImage.width, (uint)gestureImage.height);
-        File.WriteAllBytes(path+"/"+gestureName+".png", bytes);
+        path = path + "/" + gestureName + ".png";
+        File.WriteAllBytes(path, bytes);
+        Debug.Log(path);
+        AssetDatabase.Refresh();
+        TextureImporter textureImporter = (TextureImporter)TextureImporter.GetAtPath(path);
+        Debug.Log(textureImporter);
+        textureImporter.isReadable = true;
+        textureImporter.npotScale = TextureImporterNPOTScale.None;
+        textureImporter.SaveAndReimport();
+        path = path.Remove(0, 17);
+        path = path.Remove(path.Length - 4, 4);
+        gestureImage = Resources.Load<Texture2D>(path);
+        Debug.Log(path);
     }
 }

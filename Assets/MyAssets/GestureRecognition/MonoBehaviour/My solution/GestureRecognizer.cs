@@ -14,6 +14,7 @@ public class GestureRecognizer : IGestureRecognizer
         {
             int identicalPoints = 0;
             int i = 0;
+            Debug.Log(gesture.gestureImage.GetPixels().Count()+" " + pixelsToRecognize.Count());
             foreach (var color in gesture.gestureImage.GetPixels())
             {
                 if (color != Color.clear && color == pixelsToRecognize[i]) identicalPoints++;

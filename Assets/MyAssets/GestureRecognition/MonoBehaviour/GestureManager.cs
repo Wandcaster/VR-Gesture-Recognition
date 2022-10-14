@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Scripting;
@@ -43,12 +45,13 @@ public class GestureManager : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI PropabilityText;
 
-    [Header("Data")]    
+    [Header("Data")]
     public bool AddGestureMode;
-    public List<Gesture> gestureDatabase;
+    public GestureDatabase gestureDatabase;
+    public string databaseName;
     [Header("Events")]
     public OnRecognition OnRecognition;
-    
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -73,20 +76,22 @@ public class GestureManager : MonoBehaviour
             Gesture gestureComponent = new Gesture("Gesture", gestureImage, pointsData.rawPoints);
             if (AddGestureMode)
             {
-                gestureDatabase.Add(gestureComponent);
+                if (gestureDatabase == null) gestureDatabase = ScriptableObject.CreateInstance<GestureDatabase>();
+
+                gestureDatabase.gestures.Add(gestureComponent);
                 SetGestureID();
                 gestureUIController.AddGestureToUI(gestureImage, gestureComponent);
             }
             else
             {
-                List<RecognizeOutput> output = gestureRecognizer.RecognizeGesture(gestureComponent,ref gestureDatabase);
+                List<RecognizeOutput> output = gestureRecognizer.RecognizeGesture(gestureComponent, ref gestureDatabase.gestures);
                 SetUI(output, gestureComponent);
                 OnRecognition.Invoke(output);
             }
         }
     }
 
-    private void SetUI(List<RecognizeOutput> recognizeOutput,Gesture gestureComponent)
+    private void SetUI(List<RecognizeOutput> recognizeOutput, Gesture gestureComponent)
     {
         RecognizeOutput result = recognizeOutput[0];
         recognizedImage.texture = result.recognizedGesture.gestureImage;
@@ -98,9 +103,53 @@ public class GestureManager : MonoBehaviour
     public void SetGestureID()
     {
         int i = 0;
-        foreach (var item in gestureDatabase)
+        foreach (var item in gestureDatabase.gestures)
         {
             item.gestureID = i++;
         }
+    }
+
+    public void SaveDatabase(string path)
+    {
+
+        Directory.CreateDirectory(path + "/" + databaseName);
+        foreach (var item in gestureDatabase.gestures)
+        {
+            item.Save(path + "/" + gestureDatabase.databaseName);
+        }
+        if (AssetDatabase.Contains(gestureDatabase))
+        {
+            GestureDatabase temp = ScriptableObject.CreateInstance<GestureDatabase>();
+            EditorUtility.CopySerialized(gestureDatabase, temp);
+            temp.databaseName = databaseName;
+            AssetDatabase.CreateAsset(temp, path + "/" + gestureDatabase.databaseName + "/" + gestureDatabase.databaseName + ".asset");
+        }
+        else
+        {
+            GestureDatabase temp = ScriptableObject.CreateInstance<GestureDatabase>();
+            EditorUtility.CopySerialized(gestureDatabase, temp);
+            gestureDatabase = temp;
+            temp.databaseName = databaseName;
+            AssetDatabase.CreateAsset(temp, path + "/" + gestureDatabase.databaseName + "/" + gestureDatabase.databaseName + ".asset");
+        }
+        
+    }
+    public void LoadDatabase(GestureDatabase gestureDatabase)
+    {
+        this.gestureDatabase = gestureDatabase;
+        gestureUIController.ClearUI();
+        foreach (var gesture in this.gestureDatabase.gestures)
+        {
+            gestureUIController.AddGestureToUI(gesture.gestureImage, gesture);
+        }
+        gestureUIController.gestureName.text = gestureDatabase.databaseName;
+    }
+    public void SetGestureDatabaseName(string name)
+    {
+        if (gestureDatabase != null)
+        {
+            databaseName = name;
+        }
+
     }
 }

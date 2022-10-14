@@ -2,11 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GestureUIItem : MonoBehaviour
 {
+    public TMP_InputField gestureName;
     public RawImage gestureImage;
     public Button button;
     public Gesture gesture;
@@ -16,7 +18,7 @@ public class GestureUIItem : MonoBehaviour
     }
     public void DestroyGestureUIItem()
     {
-        GestureManager.Instance.gestureDatabase.Remove(gesture);
+        GestureManager.Instance.gestureDatabase.gestures.Remove(gesture);
         GestureManager.Instance.SetGestureID();
         Destroy(gameObject);
     }
@@ -26,6 +28,6 @@ public class GestureUIItem : MonoBehaviour
     }
     public void SaveGesture(string path)
     {
-        gesture.Save(path + "/" + gesture.gestureName+"/"+gesture.gestureName);
+        gesture.Save(path);
     }
 }

@@ -9,10 +9,10 @@ using Valve.VR.Extras;
 [RequireComponent(typeof(BoxCollider))]
 public class ButtonForVR : MonoBehaviour, IOnClick
 {
-    public void OnClick()
+    public void OnClick(PointerEventArgs e)
     {
+        Debug.Log(e.target.name);
         GetComponent<Button>().onClick.Invoke();
-        Debug.Log("Click");
     }
 
     // Start is called before the first frame update

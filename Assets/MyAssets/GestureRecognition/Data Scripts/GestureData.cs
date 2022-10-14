@@ -6,15 +6,9 @@ using UnityEngine;
 public class GestureData : ScriptableObject
 {
     public int ID;
-    public string gestureName;
+    public string gestureName="Gesture";
     public List<Vector2> points;
     public Texture2D gestureImage;
-    [HideInInspector]
-    public Texture2D tempGestureImage;
-
-    public void InitGestureImage()
-    {
-        gestureImage = tempGestureImage;
-    }
+    
 
 }
