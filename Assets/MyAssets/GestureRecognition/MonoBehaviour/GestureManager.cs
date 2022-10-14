@@ -70,7 +70,7 @@ public class GestureManager : MonoBehaviour
         {
             PointsData pointsData = gestureRecorder.StopCollectData();
             Texture2D gestureImage = drawController.DrawGesture(pointsData);
-            Gesture gestureComponent = new Gesture("Gesture", gestureImage);
+            Gesture gestureComponent = new Gesture("Gesture", gestureImage, pointsData.rawPoints);
             if (AddGestureMode)
             {
                 gestureDatabase.Add(gestureComponent);
@@ -92,6 +92,7 @@ public class GestureManager : MonoBehaviour
         recognizedImage.texture = result.recognizedGesture.gestureImage;
         createdImage.texture = gestureComponent.gestureImage;
         PropabilityText.text = "Propability: " + result.probability;
+        Debug.Log(result.probability);
     }
 
     public void SetGestureID()

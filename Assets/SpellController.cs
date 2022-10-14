@@ -12,12 +12,11 @@ public class SpellController : MonoBehaviour
     [SerializeField]
     float lifeTime;
     [SerializeField]
-    int gestureID;
+    string gestureName;
    
     public void OnRecognition(List<RecognizeOutput> recognizeOutputs)
     {
-        Debug.Log(recognizeOutputs[0].recognizedGesture.gestureID);
-        if (recognizeOutputs[0].recognizedGesture.gestureID != gestureID) return;
+        if (recognizeOutputs[0].recognizedGesture.gestureName != gestureName) return;
         spell = Instantiate(spellPrefab, spawnPoint.position, Quaternion.identity, spawnPoint);
         Destroy(spell, lifeTime);
     }

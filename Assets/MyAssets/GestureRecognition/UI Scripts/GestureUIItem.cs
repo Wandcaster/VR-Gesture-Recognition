@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,5 +19,13 @@ public class GestureUIItem : MonoBehaviour
         GestureManager.Instance.gestureDatabase.Remove(gesture);
         GestureManager.Instance.SetGestureID();
         Destroy(gameObject);
+    }
+    public void SetGestureName(String text)
+    {
+        gesture.gestureName = text;
+    }
+    public void SaveGesture(string path)
+    {
+        gesture.Save(path + "/" + gesture.gestureName+"/"+gesture.gestureName);
     }
 }

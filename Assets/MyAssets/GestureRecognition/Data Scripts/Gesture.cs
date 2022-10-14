@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 [Serializable]
@@ -16,7 +19,7 @@ public class Gesture
         get { return gestureData.gestureName; }
         set { gestureData.gestureName = value; }
     }
-    public int[,] points
+    public List<Vector2> rawPoints
     {
         get { return gestureData.points;}
         set { gestureData.points = value;}
@@ -26,33 +29,31 @@ public class Gesture
         get { return gestureData.tempGestureImage;}
         set { gestureData.tempGestureImage = value;}
     }
-    public Gesture(string gestureName, Texture2D gestureImage)
+    public Gesture(string gestureName, Texture2D gestureImage, List<Vector2> rawPoints)
     {
-        Init(gestureName, gestureImage);
+        Init(gestureName, gestureImage,rawPoints);
     } 
-    public int[,] GetPointsFromTexture(Texture2D texture2D)
-    {
-        int[,] output=new int[texture2D.width, texture2D.height];
-
-        for (int i = 0; i < texture2D.width; i++)
-        {
-            for (int j = 0; j < texture2D.height; j++)
-            {
-                if (texture2D.GetPixel(i, j).r == 0)
-                {
-                    output[i, j] = 1;
-                }
-            }
-        }
-        return output;
-    }
-    public void Init(string gestureName, Texture2D gestureImage)
+    public void Init(string gestureName, Texture2D gestureImage, List<Vector2> rawPoints)
     {
         gestureData = ScriptableObject.CreateInstance("GestureData") as GestureData;
         this.gestureName = gestureName;
         this.gestureImage = gestureImage;
         gestureData.InitGestureImage();
         gestureImage.filterMode = FilterMode.Point;
-        points = GetPointsFromTexture(gestureImage);
+        this.rawPoints = rawPoints;
+    }
+    public void Save(string path)
+    {
+        DirectoryInfo info=Directory.CreateDirectory(path);
+        Debug.Log(info.Exists);
+        //AssetDatabase.CreateAsset(gestureData, path + ".asset");
+        //SaveImage(path);
+        //EditorUtility.FocusProjectWindow();
+        //Selection.activeObject = gestureData;
+    }
+    private void SaveImage(string path)
+    {
+        byte[] bytes = ImageConversion.EncodeArrayToPNG(gestureImage.GetRawTextureData(), gestureImage.graphicsFormat, (uint)gestureImage.width, (uint)gestureImage.height);
+        File.WriteAllBytes(path+"/"+gestureName+".png", bytes);
     }
 }

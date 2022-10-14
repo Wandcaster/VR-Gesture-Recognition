@@ -17,7 +17,7 @@ public class BulletSpellController : MonoBehaviour
     [SerializeField]
     float distanceToActive;
     [SerializeField]
-    int gestureID;
+    string gestureName;
     [SerializeField]
     private List<Image> ammoImages;
     private int currentAmmo;
@@ -25,7 +25,7 @@ public class BulletSpellController : MonoBehaviour
     float lifeTime;
     public void OnRecognition(List<RecognizeOutput> recognizeOutputs)
     {
-        if (recognizeOutputs[0].recognizedGesture.gestureID != gestureID) return;
+        if (recognizeOutputs[0].recognizedGesture.gestureName != gestureName) return;
         Reload();
         CreateBullet();
     }

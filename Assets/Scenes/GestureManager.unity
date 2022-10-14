@@ -1075,7 +1075,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gestureRecorder: {fileID: 602792710}
-  drawController: {fileID: 602792709}
+  drawController: {fileID: 602792717}
   gestureRecognizer: {fileID: 602792711}
   gestureUIController: {fileID: 2020565901}
   isRecording:
@@ -1171,7 +1171,7 @@ MonoBehaviour:
   spawnPoint: {fileID: 2100712081}
   bulletPrefab: {fileID: 5122495324394048962, guid: b55a00a167eb0444fa62a8fffb8a81c9, type: 3}
   distanceToActive: 0.55
-  gestureID: 0
+  gestureName: V
   ammoImages:
   - {fileID: 273442245}
   - {fileID: 2001824562}
@@ -1192,7 +1192,34 @@ MonoBehaviour:
   spawnPoint: {fileID: 2100712081}
   spellPrefab: {fileID: 8105380317517651284, guid: a0180784ce337a542aabf4503a02b930, type: 3}
   lifeTime: 30
-  gestureID: 1
+  gestureName: O
+--- !u!114 &602792716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 602792707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d0cbf0ed39e7b04d81f59f70dee7a3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &602792717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 602792707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed71a345d72f0c34493c4b07cbd8b52e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boldValue: 10
+  targetWidth: 200
+  targetHeight: 200
 --- !u!1001 &642024921
 PrefabInstance:
   m_ObjectHideFlags: 0
