@@ -34,6 +34,8 @@ public class GestureManager : MonoBehaviour
     private IGestureRecognizer gestureRecognizer;
     [SerializeField]
     private GestureUIController gestureUIController;
+    [SerializeField]
+    public TrailRenderer trailRenderer; 
     [Header("Key configuration")]
     [SerializeField]
     private SteamVR_Action_Boolean isRecording;
@@ -63,14 +65,25 @@ public class GestureManager : MonoBehaviour
             Instance = this;
         }
     }
+    private void Start()
+    {
+        foreach (var item in Resources.FindObjectsOfTypeAll<GestureDatabase>())
+        {
+            item.InitGestureDatabase();
+        } 
+    }
     public void Update()
     {
         if (isRecording.lastStateDown || Input.GetKeyDown("o"))
         {
             gestureRecorder.StartCollectData();
+            trailRenderer.time = 1000;
+            trailRenderer.emitting = true;
         }
         if (isRecording.lastStateUp || Input.GetKeyDown("p"))
         {
+            trailRenderer.time = 1;
+            trailRenderer.emitting = false;
             PointsData pointsData = gestureRecorder.StopCollectData();
             Texture2D gestureImage = drawController.DrawGesture(pointsData);
             Gesture gestureComponent = new Gesture("Gesture", gestureImage, pointsData.rawPoints);
