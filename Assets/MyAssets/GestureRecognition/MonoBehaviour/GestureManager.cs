@@ -67,6 +67,7 @@ public class GestureManager : MonoBehaviour
     }
     private void Start()
     {
+        Resources.LoadAll("SavedGestures\\");
         foreach (var item in Resources.FindObjectsOfTypeAll<GestureDatabase>())
         {
             item.InitGestureDatabase();
@@ -74,13 +75,13 @@ public class GestureManager : MonoBehaviour
     }
     public void Update()
     {
-        if (isRecording.lastStateDown || Input.GetKeyDown("o"))
+        if (isRecording.lastStateDown)
         {
             gestureRecorder.StartCollectData();
             trailRenderer.time = 1000;
             trailRenderer.emitting = true;
         }
-        if (isRecording.lastStateUp || Input.GetKeyDown("p"))
+        if (isRecording.lastStateUp)
         {
             trailRenderer.time = 1;
             trailRenderer.emitting = false;

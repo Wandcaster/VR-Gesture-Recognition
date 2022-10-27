@@ -15,14 +15,16 @@ public class GesturePointsRecorder :IGesturePointsRecorder
     private GameObject spaceReferencePoint;
     private Coroutine coroutine;
 
+    Vector3 startPosition;
+    Vector3 point;
     /// <summary>
     /// Start collect point to the list 'points' every frame, skip point that the same like last recorded point.
     /// </summary>
     public IEnumerator StartCollectDataCorutine()
     {
         points.Clear();
-        Vector3 startPosition = trackingPoint.position;
-        Vector3 point;
+        startPosition = trackingPoint.position;
+        
         point = trackingPoint.position;
         point -= startPosition;
         point = Vector3.ProjectOnPlane(point,Player.instance.bodyDirectionGuess);

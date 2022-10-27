@@ -6,18 +6,19 @@ using UnityEngine;
 
 public class GestureRecognizer : IGestureRecognizer
 {
+    List<RecognizeOutput> output = new List<RecognizeOutput>();
+    Color[] pixelsToRecognize;
     public override List<RecognizeOutput> RecognizeGesture(Gesture gestureToRecognize, ref List<Gesture> gestureDatabase)
     {
-        List<RecognizeOutput> output = new List<RecognizeOutput>();
-        Color[] pixelsToRecognize = gestureToRecognize.gestureImage.GetPixels();
+        output.Clear();
+        pixelsToRecognize = gestureToRecognize.gestureImage.GetPixels();
         foreach (var gesture in gestureDatabase)
         {
             int identicalPoints = 0;
             int i = 0;
-            Debug.Log(gesture.gestureImage.GetPixels().Count()+" " + pixelsToRecognize.Count());
             foreach (var color in gesture.gestureImage.GetPixels())
             {
-                if (color != Color.clear && color == pixelsToRecognize[i]) identicalPoints++;
+                if (color == pixelsToRecognize[i]) identicalPoints++;
                 i++;
             }
             output.Add(new RecognizeOutput(gesture, (float) identicalPoints / pixelsToRecognize.Count()));

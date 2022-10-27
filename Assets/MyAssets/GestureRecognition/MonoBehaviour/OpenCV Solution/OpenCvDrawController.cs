@@ -11,9 +11,12 @@ public class OpenCvDrawController : IDrawGestureController
     int targetWidth = 200;
     [SerializeField]
     int targetHeight = 200;
+
+    Texture2D output;
+    Mat image0;
     public override Texture2D DrawGesture(PointsData pointsData)
     {
-        Texture2D output = new Texture2D(pointsData.expectedSize.x, pointsData.expectedSize.y, TextureFormat.RGBA32, false);
+        output = new Texture2D(pointsData.expectedSize.x, pointsData.expectedSize.y, TextureFormat.RGBA32, false);
         for (int i = 0; i < pointsData.expectedSize.x; i++)
         {
             for (int j = 0; j < pointsData.expectedSize.y; j++)
@@ -58,8 +61,8 @@ public class OpenCvDrawController : IDrawGestureController
 
     public override Texture2D ScaleTexture(Texture2D source, int targetWidth, int targetHeight)
     {
-        Mat image0 = OpenCvSharp.Unity.TextureToMat(source);
-        Cv2.Resize(image0, image0, new Size(targetWidth, targetHeight));
+        image0 = OpenCvSharp.Unity.TextureToMat(source);
+        Cv2.Resize(image0, image0, new Size(targetWidth, targetHeight),interpolation:InterpolationFlags.Nearest);
         return OpenCvSharp.Unity.MatToTexture(image0);
     }
 }

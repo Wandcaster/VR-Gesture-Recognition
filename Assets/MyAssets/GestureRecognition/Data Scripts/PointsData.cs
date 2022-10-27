@@ -52,11 +52,11 @@ public class PointsData
     }
     private bool checkPoints(Vector2 point)
     {
-        if (point.x <= 0) return false;
-        if (point.y <= 0) return false;
+        if (point.x < 0) return false;
+        if (point.y < 0) return false;
 
-        if (point.x >= expectedSize.x - 1) return false;
-        if (point.y >= expectedSize.y - 1) return false;
+        if (point.x > expectedSize.x) return false;
+        if (point.y > expectedSize.y) return false;
 
         return true;
     }
