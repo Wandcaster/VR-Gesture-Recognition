@@ -52,7 +52,7 @@ public class VectorGestureManager : MonoBehaviour
             trailRenderer.emitting = false;
 
             positions = new Vector3[trailRenderer.positionCount];
-            positions= TransformPoints(positions);
+            //positions= TransformPoints(positions);
 
             trailRenderer.GetPositions(positions);
             positions = AddOrRemovePoints(positions);
@@ -117,12 +117,12 @@ public class VectorGestureManager : MonoBehaviour
     }
     private float CompareGesture(VectorGesture gesture0, VectorGesture gesture1)
     {
-        float difference = 0;
+        List<float> difference = new List<float>() ;
         for (int i = 0; i < gesture0.vectors.Count; i++)
         {
-            difference += (gesture0.vectors[i] - gesture1.vectors[i]).magnitude;
+            difference.Add((gesture0.vectors[i] - gesture1.vectors[i]).magnitude);
         }
-        return difference;
+        return geometricMean(difference.ToArray(),difference.Count);
     }
     private Vector3[] TransformPoints(Vector3[] positions)
     {
@@ -132,5 +132,22 @@ public class VectorGestureManager : MonoBehaviour
             output.Add(Vector3.ProjectOnPlane(item, Player.instance.bodyDirectionGuess));
         }
         return output.ToArray();
+    }
+    float geometricMean(float [] arr, int n)
+    {
+        // declare product variable and
+        // initialize it to 1.
+        float product = 1;
+
+        // Compute the product of all the
+        // elements in the array.
+        for (int i = 0; i < n; i++)
+            product = product * arr[i];
+
+        // compute geometric mean through formula
+        // pow(product, 1/n) and return the value
+        // to main function.
+        float gm = Mathf.Pow(product, (float)1 / n);
+        return gm;
     }
 }
