@@ -9,6 +9,6 @@ public class GestureDatabaseUI : MonoBehaviour
     public GestureDatabase gestureDatabase;
     public void LoadDatabase()
     {
-        GestureManager.Instance.LoadDatabase(gestureDatabase);
+        //GestureManager.Instance.LoadDatabase(gestureDatabase);
     }
 }

@@ -24,7 +24,7 @@ public class TestingScript : MonoBehaviour
             gesture0 = new PointsData(points, accuracy);
             Texture2D gestureImage = drawController.DrawGesture(gesture0);
             tempGesture = new Gesture("Gesture", gestureImage, gesture0.rawPoints);
-            List<RecognizeOutput> output = gestureRecognizer.RecognizeGesture(tempGesture, ref gestureDatabase.gestures);
+            List<RecognizeOutput> output = gestureRecognizer.RecognizeGesture(tempGesture, gestureDatabase.gestures);
             Debug.Log(output);
             Debug.Log(output[0].recognizedGesture.gestureName + " " + output[0].probability);
             Debug.Break();

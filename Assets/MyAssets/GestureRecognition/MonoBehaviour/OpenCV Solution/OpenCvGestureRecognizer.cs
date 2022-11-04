@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class OpenCvGestureRecognizer : IGestureRecognizer
 {
-    public override List<RecognizeOutput> RecognizeGesture(Gesture gestureToRecognize, ref List<Gesture> gestureDatabase)
+    public override List<RecognizeOutput> RecognizeGesture(Gesture gestureToRecognize, List<Gesture> gestureDatabase)
     {
         List<RecognizeOutput> output = new List<RecognizeOutput>();
         foreach (var gesture in gestureDatabase)

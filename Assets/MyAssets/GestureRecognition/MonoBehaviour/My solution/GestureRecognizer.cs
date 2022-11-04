@@ -8,7 +8,7 @@ public class GestureRecognizer : IGestureRecognizer
 {
     List<RecognizeOutput> output = new List<RecognizeOutput>();
     Color[] pixelsToRecognize;
-    public override List<RecognizeOutput> RecognizeGesture(Gesture gestureToRecognize, ref List<Gesture> gestureDatabase)
+    public override List<RecognizeOutput> RecognizeGesture(Gesture gestureToRecognize, List<Gesture> gestureDatabase)
     {
         output.Clear();
         pixelsToRecognize = gestureToRecognize.gestureImage.GetPixels();

@@ -25,10 +25,10 @@ public class GestureUIController : MonoBehaviour
         UIGesture[UIGesture.Count - 1].GetComponent<GestureUIItem>().gesture = gesture;
         UIGesture[UIGesture.Count - 1].GetComponent<GestureUIItem>().gestureName.text = gesture.gestureName;
     }
-    public void SaveDatabase(string path)
-    {
-        GestureManager.Instance.SaveDatabase(path);
-    }
+    //public void SaveDatabase(string path)
+    //{
+    //    GestureManager.Instance.SaveDatabase(path);
+    //}
     public void LoadDatabase(string path)
     {
         for (int i = 0; i < GestureDatabaseContainer.childCount; i++)
@@ -60,8 +60,8 @@ public class GestureUIController : MonoBehaviour
         }
         UIGesture.Clear();
     }
-    public void SetGestureDatabaseName()
-    {
-        GestureManager.Instance.SetGestureDatabaseName(gestureName.text);
-    }
+    //public void SetGestureDatabaseName()
+    //{
+    //    GestureManager.Instance.SetGestureDatabaseName(gestureName.text);
+    //}
 }

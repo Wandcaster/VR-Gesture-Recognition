@@ -41,7 +41,7 @@ public class Gesture
         gestureImage.filterMode = FilterMode.Point;
         this.rawPoints = rawPoints;
     }
-    public void Save(string path, ref GestureDatabase database)
+    public void Save(string path)
     {
         path += "/" + gestureName;
         Directory.CreateDirectory(path);
@@ -51,7 +51,6 @@ public class Gesture
         AssetDatabase.CreateAsset(temp, path + "/" + gestureName + ".asset");
         EditorUtility.FocusProjectWindow();
         Selection.activeObject = gestureData;
-        database.gestures.Add(new Gesture(temp));
     }
     private void SaveImage(string path)
     {

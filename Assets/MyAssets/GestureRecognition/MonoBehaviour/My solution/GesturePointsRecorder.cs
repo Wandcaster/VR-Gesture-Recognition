@@ -24,22 +24,28 @@ public class GesturePointsRecorder :IGesturePointsRecorder
     {
         points.Clear();
         startPosition = trackingPoint.position;
-        
-        point = trackingPoint.position;
-        point -= startPosition;
-        point = Vector3.ProjectOnPlane(point,Player.instance.bodyDirectionGuess);
-        point.x = point.x + point.z;
-        points.Add(new Vector2(point.x,point.y));
+
+        //CalculatePoint();
+        points.Add(new Vector2(point.x, point.y));
 
         while (true)
         {
             point = trackingPoint.position;
             point -= startPosition;
             point = Vector3.ProjectOnPlane(point, Player.instance.bodyDirectionGuess);
-            point.x = point.x+point.z;
-            if(new Vector2(point.x , point.y)!=points[points.Count-1])points.Add(new Vector2(point.x, point.y));
+            point.x = point.x + point.z;
+            if (new Vector2(point.x, point.y) != points[points.Count - 1]) points.Add(new Vector2(point.x, point.y));
             yield return true;
         }
+    }
+
+    private Vector3 CalculatePoint(Vector3 point)
+    {
+        point = trackingPoint.position;
+        point -= startPosition;
+        point = Vector3.ProjectOnPlane(point, Player.instance.bodyDirectionGuess);
+        point.x = point.x + point.z;
+        return point;
     }
 
     /// <summary>
@@ -56,4 +62,5 @@ public class GesturePointsRecorder :IGesturePointsRecorder
     {
         coroutine = StartCoroutine(StartCollectDataCorutine());
     }
+
 }
