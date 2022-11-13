@@ -5,52 +5,40 @@ using UnityEditor;
 using UnityEngine;
 
 [Serializable]
-public class Gesture 
+public class Gesture:IGesture
 {
     [SerializeField]
-    private GestureData gestureData;
-    public int gestureID
+    private GestureData imageGestureData
     {
-        get { return gestureData.ID; }
-        set { gestureData.ID = value; }
-    }
-    public string gestureName
-    {
-        get { return gestureData.gestureName; }
-        set { gestureData.gestureName = value; }
+        get
+        {
+            return (GestureData)gestureData;
+        }
+        set
+        {
+            gestureData = value;
+        }
     }
     public List<Vector2> rawPoints
     {
-        get { return gestureData.points;}
-        set { gestureData.points = value;}
+        get { return imageGestureData.points;}
+        set { imageGestureData.points = value;}
     }
     public Texture2D gestureImage
     {
-        get { return gestureData.gestureImage;}
-        set { gestureData.gestureImage = value;}
+        get { return imageGestureData.gestureImage;}
+        set { imageGestureData.gestureImage = value;}
     }
-    public Gesture(string gestureName, Texture2D gestureImage, List<Vector2> rawPoints)
-    {
-        Init(gestureName, gestureImage,rawPoints);
-    } 
-    public void Init(string gestureName, Texture2D gestureImage, List<Vector2> rawPoints)
-    {
-        gestureData = ScriptableObject.CreateInstance("GestureData") as GestureData;
-        this.gestureName = gestureName;
-        this.gestureImage = gestureImage;
-        gestureImage.filterMode = FilterMode.Point;
-        this.rawPoints = rawPoints;
-    }
-    public void Save(string path)
+    public override void Save(string path)
     {
         path += "/" + gestureName;
         Directory.CreateDirectory(path);
         SaveImage(path);
         GestureData temp = ScriptableObject.CreateInstance<GestureData>();
-        EditorUtility.CopySerialized(gestureData, temp);
+        EditorUtility.CopySerialized(imageGestureData, temp);
         AssetDatabase.CreateAsset(temp, path + "/" + gestureName + ".asset");
         EditorUtility.FocusProjectWindow();
-        Selection.activeObject = gestureData;
+        Selection.activeObject = imageGestureData;
     }
     private void SaveImage(string path)
     {
@@ -69,8 +57,16 @@ public class Gesture
         gestureImage = Resources.Load<Texture2D>(path);
         Debug.Log(path);
     }
-    public Gesture(GestureData gestureData)
+    public Gesture(GestureData gestureData):base(gestureData)
     {
-        this.gestureData = gestureData;
+        this.imageGestureData = gestureData;
+    }
+    public Gesture(string gestureName, Texture2D gestureImage, List<Vector2> rawPoints) : base(null)
+    {
+        imageGestureData = ScriptableObject.CreateInstance("GestureData") as GestureData;
+        this.gestureName = gestureName;
+        this.gestureImage = gestureImage;
+        gestureImage.filterMode = FilterMode.Point;
+        this.rawPoints = rawPoints;
     }
 }

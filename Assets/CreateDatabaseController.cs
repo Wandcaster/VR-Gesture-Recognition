@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class CreateDatabaseController : MonoBehaviour
 {
-    string savePath = "Assets/Resources/SavedGestures";
+    
     [SerializeField]
     private TMP_InputField inputFieldDatabaseName;
     public void CreateDatabase()
     {
-        GestureManager.Instance.CreateDatabase(savePath, inputFieldDatabaseName.text);
+        GestureManager.Instance.CreateDatabase(inputFieldDatabaseName.text);
         Destroy(gameObject);
     }
 }

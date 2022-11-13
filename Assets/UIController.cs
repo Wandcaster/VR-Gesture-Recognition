@@ -17,8 +17,7 @@ public class UIController : MonoBehaviour
     GameObject testModePanel;
     [SerializeField]
     TMP_Dropdown mode;
-    [SerializeField]
-    TMP_Dropdown type;
+    public TMP_Dropdown type;
     [SerializeField]
     List<TMP_Dropdown> GestureDatabasesDropdowns;
     [SerializeField]
@@ -28,7 +27,7 @@ public class UIController : MonoBehaviour
     RawImage createModeImage;
     [SerializeField]
     TMP_InputField gestureName;
-    Gesture tempGesture;
+    IGesture tempGesture;
     [SerializeField]
     RawImage inspectModeImage;
     [SerializeField]
@@ -43,6 +42,7 @@ public class UIController : MonoBehaviour
     TextMeshProUGUI DrawedGestureName;
     [SerializeField]
     TextMeshProUGUI RecognizedGestureName;
+    private GameObject tempCreateDatabasePopup;
 
     int currentIdInInspectMode;
 
@@ -144,7 +144,7 @@ public class UIController : MonoBehaviour
                 GestureManager.Instance.gestureDatabase = null;
                 break;
             case 1:
-                Instantiate(CreateDatabasePopup, transform);
+                if(tempCreateDatabasePopup==null) tempCreateDatabasePopup=Instantiate(CreateDatabasePopup, transform);
                 break;
             default:
                 GestureManager.Instance.gestureDatabase = gestureDatabases.Find(x => x.databaseName.Equals(GestureDatabasesDropdowns[0].options[value].text));
@@ -165,15 +165,24 @@ public class UIController : MonoBehaviour
             }
         }
     }
-    public void CreateGesture(Gesture gesture)
+    public void CreateGesture(IGesture gesture)
     {
         if (!createModePanel.activeSelf) return;
-        createModeImage.texture = gesture.gestureImage; //Po drugim u¿yciu rysuje bzdety
-        tempGesture = gesture;
+        if (type.value == 1)
+        {
+            Gesture imageGesture=(Gesture) gesture;
+            createModeImage.texture = imageGesture.gestureImage;
+            tempGesture = imageGesture;
+        }
+        else if(type.value==2)
+        {
+            VectorGesture vectorGesture = (VectorGesture)gesture;
+            tempGesture = vectorGesture;
+        }
     }
-    public void SaveGesture()
+    public void SaveGesture() //Do poprawy
     {
-        tempGesture.gestureName = gestureName.text;
+        tempGesture.gestureData.gestureName = gestureName.text;
         GestureManager.Instance.AddGestureToDatabase(tempGesture);
         tempGesture = null;
     }
@@ -183,26 +192,40 @@ public class UIController : MonoBehaviour
         int gestureCount = GestureManager.Instance.gestureDatabase.gestures.Count-1;
         currentIdInInspectMode += idChangeValue;
         if (currentIdInInspectMode < 0 || currentIdInInspectMode > gestureCount) currentIdInInspectMode=0;
-        Gesture gesture = GestureManager.Instance.gestureDatabase.gestures[currentIdInInspectMode];
-        inspectModeImage.texture = gesture.gestureImage;
+
+        IGesture gesture = GestureManager.Instance.gestureDatabase.gestures[currentIdInInspectMode];
         inspectModeGestureName.text = gesture.gestureName;
         currentIdInInspectModeText.text = currentIdInInspectMode.ToString();
     }
     public void RemoveGesture()
     {
-        Gesture gesture = GestureManager.Instance.gestureDatabase.gestures[currentIdInInspectMode];
+        IGesture gesture = GestureManager.Instance.gestureDatabase.gestures[currentIdInInspectMode];
         GestureManager.Instance.RemoveGestureFromDatabase(gesture);
         LoadToInspectDatabasePanel(-1);//LoadPrevGesture
     }
-    private void TestMode(Gesture gesture)
+    private void TestMode(IGesture gesture)
     {
         if (!testModePanel.activeSelf) return;
-        List<RecognizeOutput> output = GestureManager.Instance.gestureRecognizer.RecognizeGesture(gesture, GestureManager.Instance.gestureDatabase.gestures);
-        RecognizedGestureName.text = output[0].recognizedGesture.gestureName;
-        RecognizedGestureImage.texture = output[0].recognizedGesture.gestureImage;
+        if (type.value == 1)
+        {
+            Gesture imageGesture = (Gesture)gesture;
+            List<RecognizeOutput> output = GestureManager.Instance.gestureRecognizer.RecognizeGesture(imageGesture, GestureManager.Instance.gestureDatabase.gestures);
+            Gesture gestureWithTheHighestProbability = (Gesture)output[0].recognizedGesture;
+            RecognizedGestureName.text = gestureWithTheHighestProbability.gestureName;
+            RecognizedGestureImage.texture = gestureWithTheHighestProbability.gestureImage;
 
-        DrawedGestureName.text = gesture.gestureName;
-        DrawedGestureImage.texture = gesture.gestureImage;
-        Debug.Log("Propability:" + output[0].probability);
+            DrawedGestureName.text = imageGesture.gestureName;
+            DrawedGestureImage.texture = imageGesture.gestureImage;
+            Debug.Log("Propability:" + output[0].probability);
+        }
+        else if(type.value==2)
+        {
+            //List<RecognizeOutput> output = GestureManager.Instance.vectorGestureRecognizer.RecognizeGesture((VectorGesture)gesture,GestureManager.Instance.gestureDatabase.gestures);
+            //VectorGesture gestureWithTheHighestProbability = (VectorGesture)output[0].recognizedGesture;
+            //RecognizedGestureName.text = gestureWithTheHighestProbability.gestureName;
+            //Debug.Log("Propability:" + output[0].probability);
+            //Dodaæ vizualizacjê
+        }
+
     }
 }

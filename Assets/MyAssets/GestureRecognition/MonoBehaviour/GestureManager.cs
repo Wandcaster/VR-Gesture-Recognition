@@ -13,17 +13,8 @@ using Valve.VR.InteractionSystem;
 
 [Serializable]
 public class OnRecognition : UnityEvent<List<RecognizeOutput>> { }
-public class OnCreateGesture : UnityEvent<Gesture> { }
-public class RecognizeOutput
-{
-    public Gesture recognizedGesture;
-    public float probability;
-    public RecognizeOutput(Gesture gesture, float probability)
-    {
-        recognizedGesture = gesture;
-        this.probability = probability;
-    }
-}
+public class OnCreateGesture : UnityEvent<IGesture> { }
+
 public class GestureManager : MonoBehaviour
 {
     public static GestureManager Instance { get; private set; }
@@ -32,13 +23,15 @@ public class GestureManager : MonoBehaviour
     private IDrawGestureController drawController;
     [SerializeField]
     public IGestureRecognizer gestureRecognizer;
-    public UIController gestureUIController;
+    public UIController gestureUIController; 
+    public VectorGestureRecognizer vectorGestureRecognizer;
     [SerializeField]
     public TrailRenderer trailRenderer; 
     [Header("Key configuration")]
     [SerializeField]
     private SteamVR_Action_Boolean isRecording;
     [Header("Data")]
+    string savePath = "Assets/Resources/SavedGestures"; //path to folder with gestureDatabases
     public GestureDatabase gestureDatabase;
     [Header("Events")]
     public OnRecognition OnRecognition;
@@ -79,12 +72,26 @@ public class GestureManager : MonoBehaviour
         {
             positions = new Vector3[trailRenderer.positionCount];
             trailRenderer.GetPositions(positions);
-            PointsData pointsData = new PointsData(new List<Vector2>(TransformPoints(positions)), 1000);
-            StopTrialRenderer();
-            Texture2D gestureImage = drawController.DrawGesture(pointsData);
-            Gesture gestureComponent = new Gesture("Gesture", gestureImage, pointsData.rawPoints);
-            OnCreateGesture.Invoke(gestureComponent);
+            if (gestureUIController.type.value == 1) ImageMode(positions);
+            else if(gestureUIController.type.value == 2)VectorMode(positions);
+
         }
+    }
+    private void VectorMode(Vector3[] positions)
+    {
+        StopTrialRenderer();
+        VectorGesture gesture = new VectorGesture("Gesture", positions);
+        OnCreateGesture.Invoke(gesture);
+
+        //vectorGestureRecognizer.RecognizeGesture(gesture,gestureDatabase.gestures);
+    }
+    private void ImageMode(Vector3[] positions)
+    {
+        PointsData pointsData = new PointsData(new List<Vector2>(TransformPoints(positions)), 1000);
+        StopTrialRenderer();
+        Texture2D gestureImage = drawController.DrawGesture(pointsData);
+        Gesture gestureComponent = new Gesture("Gesture", gestureImage, pointsData.rawPoints);
+        OnCreateGesture.Invoke(gestureComponent);
     }
     private void StopTrialRenderer()
     {
@@ -131,21 +138,21 @@ public class GestureManager : MonoBehaviour
         }
         return gestureDatabases;
     }
-    public void AddGestureToDatabase(Gesture gesture)
+    public void AddGestureToDatabase(IGesture gesture)
     {
-        gesture.Save("Assets/Resources/SavedGestures" + "/" + gestureDatabase.databaseName);
+        gesture.Save(savePath + "/" + gestureDatabase.databaseName);
         gestureDatabase.gestures.Add(gesture);
         gestureDatabase.InitGestureDatabase();
         SetGestureID();
     }
-    public void RemoveGestureFromDatabase(Gesture gesture)
+    public void RemoveGestureFromDatabase(IGesture gesture)
     {
         gestureDatabase.gestures.Remove(gesture);
-        Directory.Delete("Assets/Resources/SavedGestures" + "/" + gestureDatabase.databaseName + "/" + gesture.gestureName,true);
-        File.Delete("Assets/Resources/SavedGestures" + "/" + gestureDatabase.databaseName + "/" + gesture.gestureName + ".meta");
+        Directory.Delete(savePath + "/" + gestureDatabase.databaseName + "/" + gesture.gestureName,true);
+        File.Delete(savePath + "/" + gestureDatabase.databaseName + "/" + gesture.gestureName + ".meta");
         SetGestureID();
     }
-    public void CreateDatabase(string savePath, string name)
+    public void CreateDatabase(string name)
     {
         if (name.Length == 0) return;
         Directory.CreateDirectory(savePath + "/" + name);

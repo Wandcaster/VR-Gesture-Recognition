@@ -4,12 +4,12 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "GestureDatabase", menuName = "GestureManager/GestureDatabase", order = 1)]
-public class GestureDatabase : ScriptableObject
+//[CreateAssetMenu(fileName = "GestureDatabase", menuName = "GestureManager/GestureDatabase", order = 1)]
+public class GestureDatabase:ScriptableObject
 {
     public string databaseName = "Database";
-    public List<Gesture> gestures = new List<Gesture>();
-    public  void InitGestureDatabase()
+    public List<IGesture> gestures = new List<IGesture>();
+    public void InitGestureDatabase() //Tworzone s¹ Gesture zamiast IGesture 
     {
         gestures.Clear();
         string path = AssetDatabase.GetAssetPath(this);
@@ -18,7 +18,7 @@ public class GestureDatabase : ScriptableObject
         {
             path = Directory.GetFiles(item)[0].Remove(Directory.GetFiles(item)[0].Length - 6, 6);
             path = path.Remove(0, 17);
-            gestures.Add(new Gesture(Resources.Load<GestureData>(path)));
+            gestures.Add(new IGesture(Resources.Load<IGestureData>(path)));
         }
     }
 }
