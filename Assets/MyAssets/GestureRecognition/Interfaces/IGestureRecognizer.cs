@@ -5,5 +5,5 @@ using UnityEngine;
 
 public abstract class IGestureRecognizer:MonoBehaviour
 {
-    public abstract List<RecognizeOutput> RecognizeGesture(Gesture gestureToRecognize, List<IGesture> gestureDatabase);
+    public abstract List<RecognizeOutput> RecognizeGesture(ImageGesture gestureToRecognize, List<IGesture> gestureDatabase);
 }

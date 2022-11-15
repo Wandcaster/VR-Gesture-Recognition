@@ -2,6 +2,7 @@ using OpenCvSharp;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 public class OpenCvDrawController : IDrawGestureController
 {
@@ -11,7 +12,7 @@ public class OpenCvDrawController : IDrawGestureController
     int targetWidth = 200;
     [SerializeField]
     int targetHeight = 200;
-
+    Vector3 bodyDirectionGuess;
     Texture2D output;
     Mat image0;
     public override Texture2D DrawGesture(PointsData pointsData)
@@ -24,8 +25,13 @@ public class OpenCvDrawController : IDrawGestureController
                 if (pointsData.pointsAfterTransform[i, j] == 1) output.SetPixel(i, j, Color.black);
             }
         }
+
+         bodyDirectionGuess = Player.instance.bodyDirectionGuess;
+        Debug.Log(bodyDirectionGuess);
+
         output = BoldLines(output);
         output = ScaleTexture(output, targetWidth, targetHeight);
+        if (Player.instance.bodyDirectionGuess.x> Player.instance.bodyDirectionGuess.z)output = FlipTexture(output);
         return output;
     }
     public override Texture2D BoldLines(Texture2D texture)
@@ -58,11 +64,22 @@ public class OpenCvDrawController : IDrawGestureController
         texture.Apply();
         return texture;
     }
-
     public override Texture2D ScaleTexture(Texture2D source, int targetWidth, int targetHeight)
     {
         image0 = OpenCvSharp.Unity.TextureToMat(source);
         Cv2.Resize(image0, image0, new Size(targetWidth, targetHeight),interpolation:InterpolationFlags.Nearest);
         return OpenCvSharp.Unity.MatToTexture(image0);
+    }
+    private Texture2D FlipTexture(Texture2D source)
+    {
+        Debug.Log("Flip");
+        image0 = OpenCvSharp.Unity.TextureToMat(source);
+        Cv2.Flip(image0, image0, FlipMode.Y);
+        return OpenCvSharp.Unity.MatToTexture(image0);
+    }
+    private bool IsBetween<T>( T item, T start, T end)
+    {
+        return Comparer<T>.Default.Compare(item, start) > 0
+            && Comparer<T>.Default.Compare(item, end) < 0;
     }
 }

@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class OpenCvGestureRecognizer : IGestureRecognizer
 {
-    public override List<RecognizeOutput> RecognizeGesture(Gesture gestureToRecognize, List<IGesture> gestureDatabase)
+    public override List<RecognizeOutput> RecognizeGesture(ImageGesture gestureToRecognize, List<IGesture> gestureDatabase)
     {
         List<RecognizeOutput> output = new List<RecognizeOutput>();
-        foreach (Gesture gesture in gestureDatabase)
+        foreach (ImageGesture gesture in gestureDatabase)
         {
             double propability= CompareImages(gestureToRecognize.gestureImage, gesture.gestureImage);
             output.Add(new RecognizeOutput(gesture, (float)propability));

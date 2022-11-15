@@ -8,11 +8,11 @@ public class GestureRecognizer : IGestureRecognizer
 {
     List<RecognizeOutput> output = new List<RecognizeOutput>();
     Color[] pixelsToRecognize;
-    public override List<RecognizeOutput> RecognizeGesture(Gesture gestureToRecognize, List<IGesture> gestureDatabase)
+    public override List<RecognizeOutput> RecognizeGesture(ImageGesture gestureToRecognize, List<IGesture> gestureDatabase)
     {
         output.Clear();
         pixelsToRecognize = gestureToRecognize.gestureImage.GetPixels();
-        foreach (Gesture gesture in gestureDatabase)
+        foreach (ImageGesture gesture in gestureDatabase)
         {
             int identicalPoints = 0;
             int i = 0;
