@@ -21,7 +21,6 @@ public class GestureManager : MonoBehaviour
     [Header("Components configuration")]
     [SerializeField]
     private IDrawGestureController drawController;
-    [SerializeField]
     public IGestureRecognizer gestureRecognizer;
     public UIController gestureUIController; 
     public VectorGestureRecognizer vectorGestureRecognizer;

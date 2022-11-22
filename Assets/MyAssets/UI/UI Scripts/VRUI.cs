@@ -6,7 +6,7 @@ using Valve.VR.Extras;
 [RequireComponent(typeof(BoxCollider))]
 public class VRUI :MonoBehaviour,IOnClick
 {
-    public void Start()
+    public void Awake()
     {
         GetComponent<BoxCollider>().size = Vector3.zero;
         StartCoroutine(SetColliderSize());

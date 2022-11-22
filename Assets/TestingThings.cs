@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Valve.VR.InteractionSystem;
 
 public class TestingThings : MonoBehaviour
@@ -14,6 +15,6 @@ public class TestingThings : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.DrawRay(transform.position, Player.instance.bodyDirectionGuess);
+        //Debug.DrawRay(transform.position, Player.instance.bodyDirectionGuess);
     }
 }
