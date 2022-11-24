@@ -1,15 +1,19 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Scripting;
-using UnityEngine.UI;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
+
+public enum GestureType
+{
+    None,
+    ImageGesture,
+    VectorGesture
+}
+
 
 [Serializable]
 public class OnRecognition : UnityEvent<List<RecognizeOutput>> { }
@@ -19,24 +23,23 @@ public class GestureManager : MonoBehaviour
 {
     public static GestureManager Instance { get; private set; }
     [Header("Components configuration")]
-    [SerializeField]
-    private IDrawGestureController drawController;
-    public IGestureRecognizer gestureRecognizer;
-    public UIController gestureUIController; 
-    public VectorGestureRecognizer vectorGestureRecognizer;
-    [SerializeField]
-    public TrailRenderer trailRenderer; 
+    [SerializeField] private IDrawGestureController drawController;
+    [SerializeField] private ImageGestureRecognizer imageGestureRecognizer;
+    [SerializeField] private VectorGestureRecognizer vectorGestureRecognizer;
+    [SerializeField] private TrailRenderer trackedPoint;
+    public UIController gestureUIController;
     [Header("Key configuration")]
     [SerializeField]
     private SteamVR_Action_Boolean isRecording;
-    [Header("Data")]
-    string savePath = "Assets/Resources/SavedGestures"; //path to folder with gestureDatabases
+    [Header("Data")] private string savePath = "Assets/Resources/SavedGestures"; //path to folder with gestureDatabases
     public IGestureDatabase gestureDatabase;
+    public GestureType gestureType;
     [Header("Events")]
     public OnRecognition OnRecognition;
     public OnCreateGesture OnCreateGesture=new OnCreateGesture();
 
     private Vector3[] positions;
+    private float minPointDistance = 0.004F;
 
     private void Awake()
     {
@@ -52,6 +55,17 @@ public class GestureManager : MonoBehaviour
     private void Start()
     {
         InitDatabases();
+        InitTrialRenderer();
+    }
+    private void InitTrialRenderer()
+    {
+        trackedPoint.minVertexDistance = minPointDistance;
+        trackedPoint.widthCurve = new AnimationCurve(new Keyframe[1] { new Keyframe(0, 0.01F) });
+        if (trackedPoint.material == null)
+        {
+            Material material = new Material(Shader.Find("Transparent/Diffuse"));
+            trackedPoint.material = material;
+        }
     }
     private static void InitDatabases()
     {
@@ -61,19 +75,18 @@ public class GestureManager : MonoBehaviour
             item.InitGestureDatabase();
         }
     }
-    public void Update()
+    private void Update()
     {
-        if (isRecording.lastStateDown)
+        if (isRecording.lastStateDown&&gestureDatabase!=null)
         {
             StartTrialRenderer();
         }
         if (isRecording.lastStateUp)
         {
-            positions = new Vector3[trailRenderer.positionCount];
-            trailRenderer.GetPositions(positions);
-            if (gestureUIController.type.value == 1) ImageMode(positions);
-            else if(gestureUIController.type.value == 2)VectorMode(positions);
-
+            positions = new Vector3[trackedPoint.positionCount];
+            trackedPoint.GetPositions(positions);
+            if (gestureType == GestureType.ImageGesture) ImageMode(positions);
+            else if(gestureType == GestureType.VectorGesture)VectorMode(positions);
         }
     }
     private void VectorMode(Vector3[] positions)
@@ -81,8 +94,7 @@ public class GestureManager : MonoBehaviour
         StopTrialRenderer();
         VectorGesture gesture = new VectorGesture("Gesture", positions);
         OnCreateGesture.Invoke(gesture);
-
-        //vectorGestureRecognizer.RecognizeGesture(gesture,gestureDatabase.gestures);
+        OnRecognition.Invoke(RecognizeGesture(gesture));
     }
     private void ImageMode(Vector3[] positions)
     {
@@ -91,20 +103,22 @@ public class GestureManager : MonoBehaviour
         Texture2D gestureImage = drawController.DrawGesture(pointsData);
         ImageGesture gestureComponent = new ImageGesture("Gesture", gestureImage, pointsData.rawPoints);
         OnCreateGesture.Invoke(gestureComponent);
+        OnRecognition.Invoke(RecognizeGesture(gestureComponent));
+
     }
     private void StopTrialRenderer()
     {
-        trailRenderer.time = 1;
-        trailRenderer.Clear();
-        trailRenderer.emitting = false;
+        trackedPoint.time = 1;
+        trackedPoint.Clear();
+        trackedPoint.emitting = false;
     }
     private void StartTrialRenderer()
     {
-        trailRenderer.Clear();
-        trailRenderer.time = 1000;
-        trailRenderer.emitting = true;
+        trackedPoint.Clear();
+        trackedPoint.time = 1000;
+        trackedPoint.emitting = true;
     }
-    public void SetGestureID()
+    private void SetGestureID()
     {
         int i = 0;
         foreach (var item in gestureDatabase.gestures)
@@ -112,7 +126,7 @@ public class GestureManager : MonoBehaviour
             item.gestureID = i++;
         }
     }
-    public Vector2[] TransformPoints(Vector3[] points)
+    private Vector2[] TransformPoints(Vector3[] points)
     {
         Vector2[] output = new Vector2[points.Length];
         Vector3 startPos= points[0];
@@ -127,31 +141,44 @@ public class GestureManager : MonoBehaviour
         }
         return output;
     }
-    public List<GestureImageDatabase> LoadImageDatabase(string path)
+    /// <summary>
+    /// Load Image Gesture Databases form files.
+    /// </summary>
+    /// <returns>List of Image Gesture Databases</returns>
+    public List<ImageGestureDatabase> LoadImageDatabase()
     {
-            List<GestureImageDatabase> gestureDatabases = new List<GestureImageDatabase>();
+            string path = savePath;
+            List<ImageGestureDatabase> gestureDatabases = new List<ImageGestureDatabase>();
             DirectoryInfo dirInfo = new DirectoryInfo(path);
             path = path.Remove(0, 17);
             foreach (var directory in dirInfo.GetDirectories())
             {
-                GestureImageDatabase tempDatabase= Resources.Load<GestureImageDatabase>(path + "/" + directory.Name + "/" + directory.Name);
-                if(tempDatabase!=null) gestureDatabases.Add(Resources.Load<GestureImageDatabase>(path + "/" + directory.Name + "/" + directory.Name));
+                ImageGestureDatabase tempDatabase= Resources.Load<ImageGestureDatabase>(path + "/" + directory.Name + "/" + directory.Name);
+                if(tempDatabase!=null) gestureDatabases.Add(Resources.Load<ImageGestureDatabase>(path + "/" + directory.Name + "/" + directory.Name));
             }
             return gestureDatabases;
     }
-    public List<GestureVectorDatabase> LoadVectorDatabase(string path)
+    /// <summary>
+    /// Load Vector Gesture Databases form files.
+    /// </summary>
+    /// <returns>List of Vector Gesture Databases</returns>
+    public List<VectorGestureDatabase> LoadVectorDatabase()
     {
-        List<GestureVectorDatabase> gestureDatabases = new List<GestureVectorDatabase>();
+        string path = savePath;
+        List<VectorGestureDatabase> gestureDatabases = new List<VectorGestureDatabase>();
         DirectoryInfo dirInfo = new DirectoryInfo(path);
         path = path.Remove(0, 17);
         foreach (var directory in dirInfo.GetDirectories())
         {
-            GestureVectorDatabase tempDatabase = Resources.Load<GestureVectorDatabase>(path + "/" + directory.Name + "/" + directory.Name);
+            VectorGestureDatabase tempDatabase = Resources.Load<VectorGestureDatabase>(path + "/" + directory.Name + "/" + directory.Name);
             if(tempDatabase!=null)gestureDatabases.Add(tempDatabase);
         }
         return gestureDatabases;
     }
-    
+    /// <summary>
+    /// Add gesture to current loaded database
+    /// </summary>
+    /// <param name="gesture">Gesture to add to the database</param>
     public void AddGestureToDatabase(IGesture gesture)
     {
         gesture.Save(savePath + "/" + gestureDatabase.databaseName);
@@ -159,6 +186,10 @@ public class GestureManager : MonoBehaviour
         gestureDatabase.InitGestureDatabase();
         SetGestureID();
     }
+    /// <summary>
+    /// Remove gesture from current loaded database
+    /// </summary>
+    /// <param name="gesture">Gesture to remove from the database</param>
     public void RemoveGestureFromDatabase(IGesture gesture)
     {
         gestureDatabase.gestures.Remove(gesture);
@@ -166,24 +197,48 @@ public class GestureManager : MonoBehaviour
         File.Delete(savePath + "/" + gestureDatabase.databaseName + "/" + gesture.gestureName + ".meta");
         SetGestureID();
     }
-    public void CreateDatabase(string name,int type)
+    /// <summary>
+    /// Create new gesture database and save it as file.
+    /// </summary>
+    /// <param name="name">Name of new gesture database</param>
+    /// <param name="type">Type of gesture that database stores</param>
+    public void CreateDatabase(string name,GestureType type)
     {
         if (name.Length == 0) return;
-        if (type==1)//ImageType
+        if (type==GestureType.ImageGesture)//ImageType
         {
             Directory.CreateDirectory(savePath + "/" + name);
-            GestureImageDatabase temp = ScriptableObject.CreateInstance<GestureImageDatabase>();
+            ImageGestureDatabase temp = ScriptableObject.CreateInstance<ImageGestureDatabase>();
             temp.databaseName = name;
             AssetDatabase.CreateAsset(temp, savePath + "/" + name + "/" + name + ".asset");
             gestureUIController.InitGestureDatabaseDropdown();
         }
-        if(type==2)//VectorType
+        if(type == GestureType.VectorGesture)//VectorType
         {
             Directory.CreateDirectory(savePath + "/" + name);
-            GestureVectorDatabase temp = ScriptableObject.CreateInstance<GestureVectorDatabase>();
+            VectorGestureDatabase temp = ScriptableObject.CreateInstance<VectorGestureDatabase>();
             temp.databaseName = name;
             AssetDatabase.CreateAsset(temp, savePath + "/" + name + "/" + name + ".asset");
             gestureUIController.InitGestureDatabaseDropdown();
         }
+    }
+    /// <summary>
+    /// Compare all gesture stored in database
+    /// </summary>
+    /// <param name="gesture">Gesture that will be compared to gestures form database</param>
+    /// <returns>List of RecognizeOutput that contains gesture from database and probability returned from gesture recognition</returns>
+    public List<RecognizeOutput> RecognizeGesture(IGesture gesture)
+    {
+        VectorGesture vectorGesture = gesture as VectorGesture;
+        List<RecognizeOutput> output;
+        if (vectorGesture != null)
+        {
+            output= vectorGestureRecognizer.RecognizeGesture(vectorGesture, gestureDatabase.gestures);
+        }
+        else
+        {
+            output= imageGestureRecognizer.RecognizeGesture((ImageGesture)gesture,gestureDatabase.gestures);
+        }
+        return output;
     }
 }

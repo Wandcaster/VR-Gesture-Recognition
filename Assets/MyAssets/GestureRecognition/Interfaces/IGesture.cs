@@ -6,6 +6,7 @@ using UnityEngine;
 [Serializable]
 public class IGesture
 {
+    public IGestureData gestureData;
     public int gestureID
     {
         get { return gestureData.ID; }
@@ -16,7 +17,6 @@ public class IGesture
         get { return gestureData.gestureName; }
         set { gestureData.gestureName = value; }
     }
-    public IGestureData gestureData= new IGestureData();
     public IGesture(IGestureData gestureData)
     {
         this.gestureData = gestureData;

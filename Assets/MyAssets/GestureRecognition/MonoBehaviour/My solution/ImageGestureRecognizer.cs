@@ -4,10 +4,16 @@ using System.Linq;
 using Unity.Collections;
 using UnityEngine;
 
-public class GestureRecognizer : IGestureRecognizer
+public class ImageGestureRecognizer : IGestureRecognizer
 {
     List<RecognizeOutput> output = new List<RecognizeOutput>();
     Color[] pixelsToRecognize;
+    /// <summary>
+    /// Compare gesture to gestures from gestureDatabase
+    /// </summary>
+    /// <param name="gestureToRecognize">Gesture to compare</param>
+    /// <param name="gestureDatabase">List of gesures to compare</param>
+    /// <returns>List of RecognizeOutput that contains gesture from database and probability returned from gesture recognition</returns>
     public override List<RecognizeOutput> RecognizeGesture(ImageGesture gestureToRecognize, List<IGesture> gestureDatabase)
     {
         output.Clear();

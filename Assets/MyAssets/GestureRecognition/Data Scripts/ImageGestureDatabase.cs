@@ -4,7 +4,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-public class GestureImageDatabase : IGestureDatabase
+public class ImageGestureDatabase : IGestureDatabase
 {
     public override void InitGestureDatabase()
     {

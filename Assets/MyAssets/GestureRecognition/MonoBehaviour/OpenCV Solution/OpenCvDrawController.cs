@@ -14,7 +14,11 @@ public class OpenCvDrawController : IDrawGestureController
     int targetHeight = 200;
     Vector3 bodyDirectionGuess;
     Texture2D output;
-    Mat image0;
+    Mat image0= new Mat();
+    private void Start()
+    {
+        output = new Texture2D(targetWidth, targetHeight);
+    }
     public override Texture2D DrawGesture(PointsData pointsData)
     {
         output = new Texture2D(pointsData.expectedSize.x, pointsData.expectedSize.y, TextureFormat.RGBA32, false);
@@ -26,15 +30,13 @@ public class OpenCvDrawController : IDrawGestureController
             }
         }
 
-         bodyDirectionGuess = Player.instance.bodyDirectionGuess;
-        Debug.Log(bodyDirectionGuess);
-
+        bodyDirectionGuess = Player.instance.bodyDirectionGuess;
         output = BoldLines(output);
         output = ScaleTexture(output, targetWidth, targetHeight);
         if (Player.instance.bodyDirectionGuess.x> Player.instance.bodyDirectionGuess.z)output = FlipTexture(output);
         return output;
     }
-    public override Texture2D BoldLines(Texture2D texture)
+    protected override Texture2D BoldLines(Texture2D texture)
     {
         List<Vector2Int> points = new List<Vector2Int>(); ;
         for (int i = 0; i < texture.width; i++)
@@ -64,7 +66,7 @@ public class OpenCvDrawController : IDrawGestureController
         texture.Apply();
         return texture;
     }
-    public override Texture2D ScaleTexture(Texture2D source, int targetWidth, int targetHeight)
+    protected override Texture2D ScaleTexture(Texture2D source, int targetWidth, int targetHeight)
     {
         image0 = OpenCvSharp.Unity.TextureToMat(source);
         Cv2.Resize(image0, image0, new Size(targetWidth, targetHeight),interpolation:InterpolationFlags.Nearest);
@@ -72,14 +74,8 @@ public class OpenCvDrawController : IDrawGestureController
     }
     private Texture2D FlipTexture(Texture2D source)
     {
-        Debug.Log("Flip");
         image0 = OpenCvSharp.Unity.TextureToMat(source);
         Cv2.Flip(image0, image0, FlipMode.Y);
         return OpenCvSharp.Unity.MatToTexture(image0);
-    }
-    private bool IsBetween<T>( T item, T start, T end)
-    {
-        return Comparer<T>.Default.Compare(item, start) > 0
-            && Comparer<T>.Default.Compare(item, end) < 0;
     }
 }

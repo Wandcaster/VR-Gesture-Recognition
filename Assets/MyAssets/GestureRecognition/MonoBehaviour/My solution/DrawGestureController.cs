@@ -15,6 +15,11 @@ public class DrawGestureController : IDrawGestureController
     [SerializeField]
     int boldValue=10;
     
+    /// <summary>
+    /// Create texture from pointData
+    /// </summary>
+    /// <param name="pointsData">Gesture points</param>
+    /// <returns>Gesture image</returns>
     public override Texture2D DrawGesture(PointsData pointsData)
     {
         Texture2D output = new Texture2D(pointsData.expectedSize.x, pointsData.expectedSize.y, TextureFormat.RGBA32, false);
@@ -32,7 +37,7 @@ public class DrawGestureController : IDrawGestureController
         return output;
     }
 
-    public override Texture2D ScaleTexture(Texture2D source, int targetWidth, int targetHeight)
+    protected override Texture2D ScaleTexture(Texture2D source, int targetWidth, int targetHeight)
     {
         Texture2D result = new Texture2D(targetWidth, targetHeight, source.format, true);
         Color32[] rpixels = result.GetPixels32(0);
@@ -47,21 +52,7 @@ public class DrawGestureController : IDrawGestureController
         return result;
     }
 
-    //public void DrawLine(Texture2D t2D, Vector2 point1, Vector2 point2, Color col)
-    //{
-    //    Vector2 t = point1;
-    //    float frac = 1 / Mathf.Sqrt(Mathf.Pow(point2.x - point1.x, 2) + Mathf.Pow(point2.y - point1.y, 2));
-    //    float ctr = 0;
-
-    //    while ((int)t.x != (int)point2.x || (int)t.y != (int)point2.y)
-    //    {
-    //        t = Vector2.Lerp(point1, point2, ctr);
-    //        ctr += frac;
-    //        t2D.SetPixel((int)t.x, (int)t.y, col);
-    //    }
-    //}
-
-    public override Texture2D BoldLines(Texture2D texture)
+    protected override Texture2D BoldLines(Texture2D texture)
     {
         List<Vector2Int> points = new List<Vector2Int>(); ;
         for (int i = 0; i < texture.width; i++)
@@ -92,10 +83,24 @@ public class DrawGestureController : IDrawGestureController
         return texture;
     }
 
-    public void SaveImageToFile(Texture2D image, string path)
-    {
-        File.WriteAllBytes(Application.dataPath + "\\Resources\\gesture.png", image.EncodeToPNG());
-        Debug.Log(Application.dataPath + "\\Resources\\gesture.png");
-    }
+    //public void SaveImageToFile(Texture2D image, string path)
+    //{
+    //    File.WriteAllBytes(Application.dataPath + "\\Resources\\gesture.png", image.EncodeToPNG());
+    //    Debug.Log(Application.dataPath + "\\Resources\\gesture.png");
+    //}
+
+    //public void DrawLine(Texture2D t2D, Vector2 point1, Vector2 point2, Color col)
+    //{
+    //    Vector2 t = point1;
+    //    float frac = 1 / Mathf.Sqrt(Mathf.Pow(point2.x - point1.x, 2) + Mathf.Pow(point2.y - point1.y, 2));
+    //    float ctr = 0;
+
+    //    while ((int)t.x != (int)point2.x || (int)t.y != (int)point2.y)
+    //    {
+    //        t = Vector2.Lerp(point1, point2, ctr);
+    //        ctr += frac;
+    //        t2D.SetPixel((int)t.x, (int)t.y, col);
+    //    }
+    //}
 
 }

@@ -29,6 +29,10 @@ public class ImageGesture:IGesture
         get { return imageGestureData.gestureImage;}
         set { imageGestureData.gestureImage = value;}
     }
+    /// <summary>
+    /// Save gesture to file
+    /// </summary>
+    /// <param name="path">Path to gesture database folder</param>
     public override void Save(string path)
     {
         path += "/" + gestureName;
@@ -40,6 +44,10 @@ public class ImageGesture:IGesture
         EditorUtility.FocusProjectWindow();
         Selection.activeObject = imageGestureData;
     }
+    /// <summary>
+    /// Save gesture image to file
+    /// </summary>
+    /// <param name="path">Path to gesture database folder</param>
     private void SaveImage(string path)
     {
         byte[] bytes = ImageConversion.EncodeArrayToPNG(gestureImage.GetRawTextureData(), gestureImage.graphicsFormat, (uint)gestureImage.width, (uint)gestureImage.height);
@@ -57,10 +65,19 @@ public class ImageGesture:IGesture
         gestureImage = Resources.Load<Texture2D>(path);
         Debug.Log(path);
     }
+    /// <summary>
+    /// Create ImageGesture from data
+    /// </summary>
     public ImageGesture(ImageGestureData gestureData):base(gestureData)
     {
         this.imageGestureData = gestureData;
     }
+    /// <summary>
+    /// Create gesture from gesture image and points
+    /// </summary>
+    /// <param name="gestureName"></param>
+    /// <param name="gestureImage"></param>
+    /// <param name="rawPoints"></param>
     public ImageGesture(string gestureName, Texture2D gestureImage, List<Vector2> rawPoints) : base(null)
     {
         imageGestureData = ScriptableObject.CreateInstance< ImageGestureData>();

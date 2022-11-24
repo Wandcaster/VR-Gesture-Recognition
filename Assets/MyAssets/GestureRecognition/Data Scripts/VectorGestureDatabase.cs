@@ -4,9 +4,8 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-public class GestureVectorDatabase : IGestureDatabase
+public class VectorGestureDatabase : IGestureDatabase
 {
-    // Start is called before the first frame update
     public override void InitGestureDatabase()
     {
         gestures.Clear();

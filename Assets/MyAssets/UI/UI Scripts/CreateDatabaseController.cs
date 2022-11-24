@@ -10,7 +10,7 @@ public class CreateDatabaseController : MonoBehaviour
     private TMP_InputField inputFieldDatabaseName;
     public void CreateDatabase()
     {
-        GestureManager.Instance.CreateDatabase(inputFieldDatabaseName.text,GestureManager.Instance.gestureUIController.type.value);
+        GestureManager.Instance.CreateDatabase(inputFieldDatabaseName.text,GestureManager.Instance.gestureType);
         Destroy(gameObject);
     }
 }
