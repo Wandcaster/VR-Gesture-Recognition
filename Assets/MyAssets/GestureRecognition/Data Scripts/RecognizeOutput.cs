@@ -1,10 +1,13 @@
-public class RecognizeOutput
+namespace VRGesureRecognition
 {
-    public IGesture recognizedGesture;
-    public float probability;
-    public RecognizeOutput(IGesture gesture, float probability)
+    public class RecognizeOutput
     {
-        recognizedGesture = gesture;
-        this.probability = probability;
+        public IGesture recognizedGesture;
+        public float probability;
+        public RecognizeOutput(IGesture gesture, float probability)
+        {
+            recognizedGesture = gesture;
+            this.probability = probability;
+        }
     }
 }

@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 namespace VRGesureRecognition
 {
-    public class ImageGestureDatabase : IGestureDatabase
+    public class VectorGestureDatabase : IGestureDatabase
     {
         public override void InitGestureDatabase()
         {
@@ -16,7 +16,7 @@ namespace VRGesureRecognition
             {
                 path = Directory.GetFiles(item)[0].Remove(Directory.GetFiles(item)[0].Length - 6, 6);
                 path = path.Remove(0, 17);
-                gestures.Add(new ImageGesture(Resources.Load<ImageGestureData>(path)));
+                gestures.Add(new VectorGesture(Resources.Load<VectorGestureData>(path)));
             }
         }
     }

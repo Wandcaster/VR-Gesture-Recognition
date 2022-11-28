@@ -1359,7 +1359,6 @@ GameObject:
   - component: {fileID: 234393315}
   - component: {fileID: 234393314}
   - component: {fileID: 234393313}
-  - component: {fileID: 234393312}
   m_Layer: 0
   m_Name: Spells
   m_TagString: Untagged
@@ -1367,18 +1366,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &234393312
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 234393311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 787cfa2d81cb05645859a4dabfbd2046, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &234393313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9125,6 +9112,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: f23a6725f88d4284199e7bf864aa2af9, type: 2}
     - target: {fileID: 4483676372638994551, guid: dbd2e8bcbaabe454499dc52b539c1efc, type: 3}
+      propertyPath: imageDrawController
+      value: 
+      objectReference: {fileID: 3964320344401104584}
+    - target: {fileID: 4483676372638994551, guid: dbd2e8bcbaabe454499dc52b539c1efc, type: 3}
       propertyPath: OnRecognition.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 234393313}
@@ -9134,6 +9125,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dbd2e8bcbaabe454499dc52b539c1efc, type: 3}
+--- !u!114 &3964320344401104584 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1076258796856759051, guid: dbd2e8bcbaabe454499dc52b539c1efc, type: 3}
+  m_PrefabInstance: {fileID: 3964320344401104583}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed71a345d72f0c34493c4b07cbd8b52e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5866844668231785202
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9307,6 +9309,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1788982974, guid: c63eac3f6e678b7448e9892177f5c6b4, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1788982974, guid: c63eac3f6e678b7448e9892177f5c6b4, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1788982974, guid: c63eac3f6e678b7448e9892177f5c6b4, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1788982974, guid: c63eac3f6e678b7448e9892177f5c6b4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1788982975, guid: c63eac3f6e678b7448e9892177f5c6b4, type: 3}
+      propertyPath: previewLeftInstance
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4646242614031226326, guid: c63eac3f6e678b7448e9892177f5c6b4, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

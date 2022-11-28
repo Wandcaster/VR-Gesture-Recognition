@@ -46,11 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 181b9019b3fb1a54f8dafbfaedd7ba1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawController: {fileID: 1076258796856759051}
+  imageDrawController: {fileID: 1076258796856759051}
   imageGestureRecognizer: {fileID: 193630768373768202}
   vectorGestureRecognizer: {fileID: 1833145584931633475}
-  gestureUIController: {fileID: 0}
   trackedPoint: {fileID: 0}
+  gestureUIController: {fileID: 0}
   isRecording:
     actionPath: /actions/default/in/RecordingGesture
     needsReinit: 0

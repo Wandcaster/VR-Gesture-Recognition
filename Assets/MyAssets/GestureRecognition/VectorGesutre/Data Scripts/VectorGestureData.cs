@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace VRGesureRecognition
 {
-    public class IGestureData : ScriptableObject
+    public class VectorGestureData : IGestureData
     {
-        public int ID;
-        public string gestureName = "Gesture";
+        public Vector3[] vectors;
     }
 }

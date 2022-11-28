@@ -3,38 +3,40 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
 using UnityEngine;
-
-public class ImageGestureRecognizer : IGestureRecognizer
+namespace VRGesureRecognition
 {
-    List<RecognizeOutput> output = new List<RecognizeOutput>();
-    Color[] pixelsToRecognize;
-    /// <summary>
-    /// Compare gesture to gestures from gestureDatabase
-    /// </summary>
-    /// <param name="gestureToRecognize">Gesture to compare</param>
-    /// <param name="gestureDatabase">List of gesures to compare</param>
-    /// <returns>List of RecognizeOutput that contains gesture from database and probability returned from gesture recognition</returns>
-    public override List<RecognizeOutput> RecognizeGesture(ImageGesture gestureToRecognize, List<IGesture> gestureDatabase)
+    public class ImageGestureRecognizer : IGestureRecognizer
     {
-        output.Clear();
-        pixelsToRecognize = gestureToRecognize.gestureImage.GetPixels();
-        foreach (ImageGesture gesture in gestureDatabase)
+        List<RecognizeOutput> output = new List<RecognizeOutput>();
+        Color[] pixelsToRecognize;
+        /// <summary>
+        /// Compare gesture to gestures from gestureDatabase
+        /// </summary>
+        /// <param name="gestureToRecognize">Gesture to compare</param>
+        /// <param name="gestureDatabase">List of gesures to compare</param>
+        /// <returns>List of RecognizeOutput that contains gesture from database and probability returned from gesture recognition</returns>
+        public override List<RecognizeOutput> RecognizeGesture(ImageGesture gestureToRecognize, List<IGesture> gestureDatabase)
         {
-            int identicalPoints = 0;
-            int i = 0;
-            foreach (var color in gesture.gestureImage.GetPixels())
+            output.Clear();
+            pixelsToRecognize = gestureToRecognize.gestureImage.GetPixels();
+            foreach (ImageGesture gesture in gestureDatabase)
             {
-                if (color == pixelsToRecognize[i]) identicalPoints++;
-                i++;
+                int identicalPoints = 0;
+                int i = 0;
+                foreach (var color in gesture.gestureImage.GetPixels())
+                {
+                    if (color == pixelsToRecognize[i]) identicalPoints++;
+                    i++;
+                }
+                output.Add(new RecognizeOutput(gesture, (float)identicalPoints / pixelsToRecognize.Count()));
             }
-            output.Add(new RecognizeOutput(gesture, (float) identicalPoints / pixelsToRecognize.Count()));
+
+            output.Sort(delegate (RecognizeOutput x, RecognizeOutput y)
+            {
+                return y.probability.CompareTo(x.probability);
+            });
+
+            return output;
         }
-
-        output.Sort(delegate (RecognizeOutput x, RecognizeOutput y)
-        {
-            return y.probability.CompareTo(x.probability);
-        });
-
-        return output;
     }
 }

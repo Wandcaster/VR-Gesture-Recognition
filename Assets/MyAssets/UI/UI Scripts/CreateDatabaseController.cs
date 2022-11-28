@@ -2,6 +2,7 @@ using System.IO;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using VRGesureRecognition;
 
 public class CreateDatabaseController : MonoBehaviour
 {
@@ -10,7 +11,8 @@ public class CreateDatabaseController : MonoBehaviour
     private TMP_InputField inputFieldDatabaseName;
     public void CreateDatabase()
     {
-        GestureManager.Instance.CreateDatabase(inputFieldDatabaseName.text,GestureManager.Instance.gestureType);
+        UIController gestureUI = FindObjectOfType<UIController>();
+        GestureManager.Instance.CreateDatabase(inputFieldDatabaseName.text, (GestureType)gestureUI.type.value);
         Destroy(gameObject);
     }
 }
