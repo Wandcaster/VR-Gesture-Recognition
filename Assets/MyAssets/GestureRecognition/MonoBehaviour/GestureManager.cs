@@ -56,7 +56,7 @@ namespace VRGesureRecognition
                 trackedPoint.material = material;
             }
         }
-        private static void InitDatabases()
+        private void InitDatabases()
         {
             Resources.LoadAll("SavedGestures\\");
             foreach (var item in Resources.FindObjectsOfTypeAll<IGestureDatabase>())
