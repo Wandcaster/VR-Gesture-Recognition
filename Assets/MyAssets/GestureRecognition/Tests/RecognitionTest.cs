@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
+using OpenCvSharp;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -8,56 +10,71 @@ using VRGesureRecognition;
 
 public class RecognitionTest
 {
-    ImageGestureRecognizer imageGestureRecognizer;
+    GameObject gameobject;
     [SetUp]
     public void InitData()
     {
-        GameObject gameobject = new GameObject();
-        imageGestureRecognizer = gameobject.AddComponent<ImageGestureRecognizer>();
+        gameobject = new GameObject();
     }
     // A test with the [RequiresPlayMode] tag ensures that the test is always run inside PlayMode.
     [UnityTest]
     [RequiresPlayMode]
-    public IEnumerator Recognition([ValueSource("AdditionCases")] List<string> pathList)
+    public IEnumerator ImageRecognition([ValueSource("GesturePath")] List<ImageGesture> gestureList)
     {
-        
+
         //Arrange
-        List<IGesture> imageGestures = new List<IGesture>();
-        foreach (var path in pathList)
-        {
-            imageGestures.Add(new ImageGesture(AssetDatabase.LoadAssetAtPath<ImageGestureData>(path)));
-        }
-       
+        ImageGestureRecognizer imageGestureRecognizer = gameobject.AddComponent<ImageGestureRecognizer>();
+
+
         // Act
-        List<RecognizeOutput> outputList = imageGestureRecognizer.RecognizeGesture((ImageGesture)imageGestures[0], imageGestures);
+        List<RecognizeOutput> outputList = imageGestureRecognizer.RecognizeGesture(gestureList[0], new List<IGesture>(gestureList));
 
         // Assert
         Debug.Log("MainGesture:" + outputList[0].recognizedGesture.gestureName);
-        for (int i = 1; i < outputList.Count; i++)
+        for (int i = 0; i < outputList.Count; i++)
         {
             Debug.Log(outputList[i].recognizedGesture.gestureName + ": " + outputList[i].probability);
-            Assert.Less(outputList[i].probability, 0.6f);
+            if (i != 0) Assert.Less(outputList[i].probability, 0.6f);
         }
         yield return false;
     }
-    private static IEnumerable AdditionCases()
+    [UnityTest]
+    [RequiresPlayMode]
+    public IEnumerator OpenCvImageRecognition([ValueSource("GesturePath")] List<ImageGesture> gestureList)
     {
-        
-        List<string> path = new List<string>
+
+        //Arrange
+        OpenCvGestureRecognizer openCvGestureRecognizer = gameobject.AddComponent<OpenCvGestureRecognizer>();
+
+        // Act
+        List<RecognizeOutput> outputList = openCvGestureRecognizer.RecognizeGesture(gestureList[0], new List<IGesture>(gestureList));
+
+        // Assert
+        Debug.Log("MainGesture:" + outputList[0].recognizedGesture.gestureName);
+        for (int i = 0; i < outputList.Count; i++)
         {
-            "Assets/Resources/SavedGestures/test0/S/S.asset",
-            "Assets/Resources/SavedGestures/test0/W/W.asset",
-            "Assets/Resources/SavedGestures/test0/X/X.asset",
-            "Assets/Resources/SavedGestures/test0/black/X.asset"
-        };
-        
-        for (int i = 0; i < path.Count; i++)
+            Debug.Log(outputList[i].recognizedGesture.gestureName + ": " + outputList[i].probability);
+           //Assert.Less(outputList[i].probability, 0.6f);
+        }
+        yield return false;
+    }
+    private static IEnumerable GesturePath()
+    {
+        ImageGestureDatabase database= AssetDatabase.LoadAssetAtPath<ImageGestureDatabase>("Assets/Resources/SavedGestures/test1/test1.asset");
+        database.InitGestureDatabase();
+        List<ImageGesture> imageGestures = new List<ImageGesture>();
+        foreach (var item in database.gestures)
         {
-            List<string> result = new List<string>(path);
-            string tempString = result[i];
+            imageGestures.Add((ImageGesture)item);
+        }
+        for (int i = 0; i < database.gestures.Count; i++)
+        {
+            List<ImageGesture> result = new List<ImageGesture>(imageGestures);
+            ImageGesture tempGesutre = result[i];
             result.RemoveAt(i);
-            result.Insert(0, tempString);
+            result.Insert(0, tempGesutre);
             yield return result;
         }
     }
-}
+    
+    }

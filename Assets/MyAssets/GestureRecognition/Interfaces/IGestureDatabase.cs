@@ -11,7 +11,7 @@ namespace VRGesureRecognition
     public abstract class IGestureDatabase : ScriptableObject
     {
         public string databaseName = "Database";
-        public List<IGesture> gestures = new List<IGesture>();
+        public List<IGesture> gestures;
         public abstract void InitGestureDatabase();
     }
 }

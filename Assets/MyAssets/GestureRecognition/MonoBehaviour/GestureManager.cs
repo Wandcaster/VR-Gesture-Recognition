@@ -172,7 +172,8 @@ namespace VRGesureRecognition
         public void AddGestureToDatabase(IGesture gesture)
         {
             gesture.Save(savePath + "/" + gestureDatabase.databaseName);
-            gestureDatabase.gestures.Add(gesture);
+            if (gestureDatabase.gestures == null) gestureDatabase.gestures = new List<IGesture>();
+            gestureDatabase.gestures.Add(gesture); 
             gestureDatabase.InitGestureDatabase();
             SetGestureID();
         }

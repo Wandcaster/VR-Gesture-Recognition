@@ -27,7 +27,7 @@ namespace VRGesureRecognition
                     if (pointsData.pointsAfterTransform[i, j] == 1) output.SetPixel(i, j, Color.black);
                 }
             }
-
+            boldValue= (pointsData.expectedSize.x+pointsData.expectedSize.y)/30;
             output = BoldLines(output);
             output = ScaleTexture(output, targetTextureSize.x, targetTextureSize.y);
             if (Player.instance.bodyDirectionGuess.x > Player.instance.bodyDirectionGuess.z) output = FlipTexture(output);

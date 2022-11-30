@@ -18,9 +18,7 @@ public class VRUI :MonoBehaviour,IOnClick
             Vector2 reactSize = GetComponent<RectTransform>().rect.size;
             BoxCollider boxCollider = GetComponent<BoxCollider>();
             boxCollider.size = new Vector3(reactSize.x, reactSize.y, 0);
-            Vector3 rectPosition=GetComponent<RectTransform>().rect.position;
             yield return true;
-            boxCollider.center = new Vector3(0 , 0, 0);
         }
         yield return true;
     }
