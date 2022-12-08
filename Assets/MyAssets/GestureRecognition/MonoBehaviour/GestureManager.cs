@@ -1,9 +1,12 @@
+using OpenCvSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UIElements;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
 namespace VRGesureRecognition
@@ -38,7 +41,10 @@ namespace VRGesureRecognition
         public OnCreateGesture OnCreateGesture = new OnCreateGesture();
 
         private Vector3[] positions;
-        private float minPointDistance = 0.004F;
+        [HideInInspector]
+        public float pointDistanceOnImage = 0.004F;
+        [HideInInspector]
+        public float pointDistanceOnVector = 0.01F;
 
         private void Start()
         {
@@ -48,7 +54,7 @@ namespace VRGesureRecognition
         }
         private void InitTrialRenderer()
         {
-            trackedPoint.minVertexDistance = minPointDistance;
+            trackedPoint.minVertexDistance = pointDistanceOnImage;
             trackedPoint.widthCurve = new AnimationCurve(new Keyframe[1] { new Keyframe(0, 0.01F) });
             if (trackedPoint.material == null)
             {
@@ -82,7 +88,7 @@ namespace VRGesureRecognition
         private void VectorMode(Vector3[] positions)
         {
             StopTrialRenderer();
-            VectorGesture gesture = new VectorGesture("Gesture", positions);
+            VectorGesture gesture = new VectorGesture("Gesture", TransformPoints(positions));
             OnCreateGesture.Invoke(gesture);
             OnRecognition.Invoke(RecognizeGesture(gesture));
         }
@@ -107,6 +113,8 @@ namespace VRGesureRecognition
             trackedPoint.Clear();
             trackedPoint.time = 1000;
             trackedPoint.emitting = true;
+            if (gestureDatabase as ImageGestureDatabase != null) trackedPoint.minVertexDistance = pointDistanceOnImage;
+            else trackedPoint.minVertexDistance = pointDistanceOnVector;
         }
         private void SetGestureID()
         {
@@ -115,6 +123,21 @@ namespace VRGesureRecognition
             {
                 item.gestureID = i++;
             }
+        }
+        Vector2[] LeftRotate(Vector2[] arr,int position)
+        {
+            int k = 0;
+            while (k < position)
+            {
+                Vector2 x = arr[0];
+                for (int i = 0; i < (arr.Length - 1); i++)
+                {
+                    arr[i] = arr[i + 1];
+                }
+                arr[(arr.Length - 1)] = x;
+                k++;
+            }
+            return arr;
         }
         private Vector2[] TransformPoints(Vector3[] points)
         {
@@ -129,7 +152,11 @@ namespace VRGesureRecognition
 
                 output[i].y = points[i].y;
             }
-            return output;
+            if (Player.instance.bodyDirectionGuess.x > Player.instance.bodyDirectionGuess.z)
+            {
+                //Do Flip
+            }
+                return output;
         }
         /// <summary>
         /// Load Image Gesture Databases form files.

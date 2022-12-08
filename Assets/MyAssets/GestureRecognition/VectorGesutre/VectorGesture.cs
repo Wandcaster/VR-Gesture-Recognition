@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 namespace VRGesureRecognition
@@ -18,7 +19,7 @@ namespace VRGesureRecognition
                 gestureData = value;
             }
         }
-        public Vector3[] vectors
+        public Vector2[] vectors
         {
             get { return vectorGestureData.vectors; }
             set { vectorGestureData.vectors = value; }
@@ -29,47 +30,61 @@ namespace VRGesureRecognition
         {
             vectorGestureData = data;
         }
-        public VectorGesture(string name, Vector3[] positions) : base(null)
+        public VectorGesture(string name, Vector2[] positions) : base(null)
         {
             vectorGestureData = ScriptableObject.CreateInstance("VectorGestureData") as VectorGestureData;
             gestureName = name;
             positions = AddOrRemovePoints(positions);
             vectors = CreateVectors(positions);
         }
-        private Vector3[] AddOrRemovePoints(Vector3[] points)
+        private Vector2[] AddOrRemovePoints(Vector2[] points)
         {
-            //if (points.Length < pointsCount / 2) throw EBlockQueueError;
-            List<Vector3> output = new List<Vector3>(points);
-            int missingVectors = pointsCount - points.Length;
+            List<Vector2> output = new List<Vector2>(points);
 
             if (points.Length < pointsCount)
             {
-                int step = pointsCount / missingVectors;
-                //Debug.Log(step);
+                int step = Mathf.CeilToInt(points.Length / Mathf.Abs(points.Length - pointsCount))+1;
+                Debug.Log(step);
+                if (step <3) step = 3;
                 int i = 0;
-                while (output.Count < pointsCount)
+                while (output.Count != pointsCount)
                 {
-                    if (output.Count <= i) i = 0;
-                    output.Insert(i + 1, (output[i] + output[i + 1]) / 2);
+                    if (i+step+1 > output.Count)
+                    {
+                        step = Mathf.CeilToInt(output.Count / Mathf.Abs(output.Count - pointsCount)) + 1;
+                        if (step <3) step = 3;
+                        if (i + step + 1 > output.Count) i = 0;
+                        else i = step;
+
+                    }
+                    output.Insert(i, (output[i] + output[i + 1]) / 2);
                     i += step;
                 }
             }
             else
             {
-                int step = Mathf.Abs(missingVectors / pointsCount);
+                int step = Mathf.CeilToInt(points.Length / (points.Length - pointsCount))+1;
+                Debug.Log(points.Length);
                 int i = 0;
-                while (output.Count > pointsCount)
+                while (output.Count != pointsCount)
                 {
-                    if (output.Count <= i) i = 0;
+                    if (i > pointsCount)
+                    {
+                        step = Mathf.CeilToInt(output.Count / (output.Count - pointsCount)) + 1;
+                        Debug.Log("New step:" + step);
+                        if (step > pointsCount) i = 0;
+                        else i = step;
+                    }
+                    Debug.Log(i);
                     output.RemoveAt(i);
                     i += step;
                 }
             }
             return output.ToArray();
         }
-        private Vector3[] CreateVectors(Vector3[] points)
+        private Vector2[] CreateVectors(Vector2[] points)
         {
-            List<Vector3> output = new List<Vector3>();
+            List<Vector2> output = new List<Vector2>();
             for (int i = 0; i < points.Length - 1; i++)
             {
                 output.Add((points[i + 1] - points[i]).normalized); //liczyæ wektor z wiêkszej ilosæi punktów
@@ -83,7 +98,7 @@ namespace VRGesureRecognition
             VectorGestureData temp = ScriptableObject.CreateInstance<VectorGestureData>();
             EditorUtility.CopySerialized(vectorGestureData, temp);
             AssetDatabase.CreateAsset(temp, path + "/" + gestureName + ".asset");
-            EditorUtility.FocusProjectWindow();
+            //EditorUtility.FocusProjectWindow();
             Selection.activeObject = temp;
         }
     }

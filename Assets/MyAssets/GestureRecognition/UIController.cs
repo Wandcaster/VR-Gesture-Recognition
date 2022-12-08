@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -28,6 +29,7 @@ namespace VRGesureRecognition
         RawImage createModeImage;
         [SerializeField]
         TMP_InputField gestureName;
+        [SerializeField]
         IGesture tempGesture;
         [SerializeField]
         RawImage inspectModeImage;
@@ -183,8 +185,18 @@ namespace VRGesureRecognition
         private void VectorVisualization(VectorGesture gesture)
         {
             vectorGestureLine.positionCount = gesture.vectors.Length;
-            vectorGestureLine.SetPositions(gesture.vectors);
-            //vectorGestureLine.Simplify(tolerance);
+            List<Vector2> points = new List<Vector2>();
+            Vector2 offset = new Vector2(1.875F, 0.816F);
+            foreach (var item in gesture.vectors)
+            {
+                points.Add(points.LastOrDefault() + (item * GestureManager.Instance.pointDistanceOnVector));
+            }
+            List<Vector3> output = new List<Vector3>();
+            for (int i = 0; i < points.Count; i++)
+            {
+                output.Add(points[i] + offset);
+            }
+            vectorGestureLine.SetPositions(output.ToArray());
         }
         private void LoadToInspectDatabasePanel(int idChangeValue)
         {

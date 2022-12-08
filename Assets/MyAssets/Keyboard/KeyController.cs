@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Valve.VR;
+using Valve.VR.InteractionSystem;
 using WindowsInput;
 
 public class KeyController : VRUI
@@ -22,15 +23,16 @@ public class KeyController : VRUI
 
     private void OnTriggerEnter(Collider other)
     {
-        if (lastCollider!=null) return;
+        if (lastCollider!=null|| other.attachedRigidbody.GetComponent<HandCollider>()==null) return;
         lastCollider= other;
         background.color = Color.gray;
         inputSimulator.Keyboard.KeyDown(Key);
-        SteamVR_Actions.default_Haptic[SteamVR_Input_Sources.LeftHand].Execute(0.5F, 0.5F,320,1);
+        //if(other.GetComponent<HandCollider>().hand.hand.handType==)
+        SteamVR_Actions.default_Haptic[other.attachedRigidbody.GetComponent<HandCollider>().hand.hand.handType].Execute(0.5F, 0.5F,320,0.3F);
     }
     private void OnTriggerExit(Collider other)
     {
-        if (lastCollider != other) return;
+        if (lastCollider != other|| other.attachedRigidbody.GetComponent<HandCollider>() == null) return;
         inputSimulator.Keyboard.KeyUp(Key);
         lastCollider = null;
         background.color = Color.white;

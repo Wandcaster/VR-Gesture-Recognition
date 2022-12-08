@@ -3983,7 +3983,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 305.5, y: -263.30334}
+  m_AnchoredPosition: {x: 205.5, y: -263.30334}
   m_SizeDelta: {x: 411, y: 148.94}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &850160933
@@ -4575,7 +4575,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 305.5, y: -25}
+  m_AnchoredPosition: {x: 205.5, y: -25}
   m_SizeDelta: {x: 208.47, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &942129755
@@ -8352,8 +8352,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 305.5, y: -189.11}
-  m_SizeDelta: {x: 611, y: 378.22}
+  m_AnchoredPosition: {x: 816.5, y: -189.11}
+  m_SizeDelta: {x: 411, y: 378.22}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2036497837
 MonoBehaviour:
@@ -8870,6 +8870,7 @@ GameObject:
   - component: {fileID: 2117315010}
   - component: {fileID: 2117315009}
   - component: {fileID: 2117315014}
+  - component: {fileID: 2117315015}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -9011,6 +9012,8 @@ MonoBehaviour:
   CreateDatabasePopup: {fileID: 7878229133986721885, guid: dabe90bcbf5335144b155cee76a313aa, type: 3}
   createModeImage: {fileID: 37136126}
   gestureName: {fileID: 644038757}
+  tempGesture:
+    gestureData: {fileID: 0}
   inspectModeImage: {fileID: 1435688158521737357}
   inspectModeGestureName: {fileID: 107453160}
   currentIdInInspectModeText: {fileID: 1187869099}
@@ -9019,8 +9022,106 @@ MonoBehaviour:
   DrawedGestureName: {fileID: 86699679}
   RecognizedGestureName: {fileID: 530350924}
   noVisualisationOfGesture: {fileID: 2800000, guid: 7015dc800452f33428ae329a8526bbde, type: 3}
-  vectorGestureLine: {fileID: 0}
+  vectorGestureLine: {fileID: 2117315015}
   tolerance: 0.29
+--- !u!120 &2117315015
+LineRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2117315008}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 61ca18134a3d7c341931a63f249b5140, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Positions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 1}
+  m_Parameters:
+    serializedVersion: 3
+    widthMultiplier: 1
+    widthCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0.0078125
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    colorGradient:
+      serializedVersion: 2
+      key0: {r: 1, g: 1, b: 1, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 0
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    numCornerVertices: 0
+    numCapVertices: 0
+    alignment: 0
+    textureMode: 0
+    shadowBias: 0.5
+    generateLightingData: 0
+  m_UseWorldSpace: 1
+  m_Loop: 0
 --- !u!114 &1435688158521737357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9119,6 +9220,10 @@ PrefabInstance:
       propertyPath: OnRecognition.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 234393313}
+    - target: {fileID: 4483676372638994551, guid: dbd2e8bcbaabe454499dc52b539c1efc, type: 3}
+      propertyPath: OnRecognition.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8777544994620087379, guid: dbd2e8bcbaabe454499dc52b539c1efc, type: 3}
       propertyPath: m_Name
       value: GestureManager
@@ -9221,7 +9326,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6190581294006443230, guid: f0c20014a7f6c2444a86b6db686dac09, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 305.5
+      value: 205.5
       objectReference: {fileID: 0}
     - target: {fileID: 6190581294006443230, guid: f0c20014a7f6c2444a86b6db686dac09, type: 3}
       propertyPath: m_AnchoredPosition.y

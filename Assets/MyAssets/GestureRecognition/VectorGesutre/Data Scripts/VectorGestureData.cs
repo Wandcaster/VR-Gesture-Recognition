@@ -5,6 +5,6 @@ namespace VRGesureRecognition
 {
     public class VectorGestureData : IGestureData
     {
-        public Vector3[] vectors;
+        public Vector2[] vectors;
     }
 }

@@ -43,7 +43,7 @@ namespace VRGesureRecognition
             ImageGestureData temp = ScriptableObject.CreateInstance<ImageGestureData>();
             EditorUtility.CopySerialized(imageGestureData, temp);
             AssetDatabase.CreateAsset(temp, path + "/" + gestureName + ".asset");
-            EditorUtility.FocusProjectWindow();
+            //EditorUtility.FocusProjectWindow();
             Selection.activeObject = imageGestureData;
         }
         /// <summary>
