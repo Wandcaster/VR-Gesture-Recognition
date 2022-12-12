@@ -143,21 +143,28 @@ namespace VRGesureRecognition
         {
             Vector2[] output = new Vector2[points.Length];
             Vector3 startPos = points[0];
+            Vector3 bodyDirection = trackedPoint.transform.forward;
+            bodyDirection.y = 0;
+            
             for (int i = 0; i < points.Length; i++)
             {
                 points[i] -= startPos;
-                points[i] = Vector3.ProjectOnPlane(points[i], Player.instance.bodyDirectionGuess);
+                points[i] = Vector3.ProjectOnPlane(points[i], bodyDirection);
                 if (Math.Abs(points[i].x) > Math.Abs(points[i].z)) output[i].x = points[i].x;
                 else output[i].x = points[i].z;
 
                 output[i].y = points[i].y;
             }
-            if (Player.instance.bodyDirectionGuess.x > Player.instance.bodyDirectionGuess.z)
+            if (bodyDirection.x > bodyDirection.z)
             {
-                //Do Flip
+                for (int i = 0; i < output.Length; i++)
+                {
+                    output[i].x = -output[i].x;
+                }
             }
-                return output;
+            return output;
         }
+        
         /// <summary>
         /// Load Image Gesture Databases form files.
         /// </summary>

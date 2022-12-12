@@ -40,44 +40,44 @@ namespace VRGesureRecognition
         private Vector2[] AddOrRemovePoints(Vector2[] points)
         {
             List<Vector2> output = new List<Vector2>(points);
-
+            if (output.Count < 10) return null;
             if (points.Length < pointsCount)
             {
-                int step = Mathf.CeilToInt(points.Length / Mathf.Abs(points.Length - pointsCount))+1;
-                Debug.Log(step);
-                if (step <3) step = 3;
-                int i = 0;
+                float step = Mathf.Abs((pointsCount / (float)(output.Count - pointsCount)) -1);
+               
+                float i = 0;
                 while (output.Count != pointsCount)
                 {
-                    if (i+step+1 > output.Count)
-                    {
-                        step = Mathf.CeilToInt(output.Count / Mathf.Abs(output.Count - pointsCount)) + 1;
-                        if (step <3) step = 3;
-                        if (i + step + 1 > output.Count) i = 0;
-                        else i = step;
-
-                    }
-                    output.Insert(i, (output[i] + output[i + 1]) / 2);
                     i += step;
+                    if (i < output.Count-1)
+                    {
+                        output.Insert(Mathf.FloorToInt(i), (output[Mathf.FloorToInt(i)] + output[Mathf.FloorToInt(i) + 1]) / 2);
+                    }
+                    else
+                    {
+                        i = 0;
+                        step = Mathf.Abs((pointsCount / (float)(output.Count - pointsCount)) - 1);
+                        if (step == pointsCount + 1) step = pointsCount / 2;
+                    }
                 }
             }
             else
             {
-                int step = Mathf.CeilToInt(points.Length / (points.Length - pointsCount))+1;
-                Debug.Log(points.Length);
-                int i = 0;
+                float step = (pointsCount / (float)(output.Count - pointsCount) )+1;
+                float i=0;
                 while (output.Count != pointsCount)
                 {
-                    if (i > pointsCount)
-                    {
-                        step = Mathf.CeilToInt(output.Count / (output.Count - pointsCount)) + 1;
-                        Debug.Log("New step:" + step);
-                        if (step > pointsCount) i = 0;
-                        else i = step;
-                    }
-                    Debug.Log(i);
-                    output.RemoveAt(i);
                     i += step;
+                    if (i < output.Count - 2)
+                    {
+                        output.RemoveAt(Mathf.FloorToInt(i));
+                    }
+                    else
+                    {
+                        i = 0;
+                        step = (pointsCount / (float)(output.Count - pointsCount)) + 1;
+                        if (step == pointsCount + 1) step = pointsCount / 2;
+                    }
                 }
             }
             return output.ToArray();

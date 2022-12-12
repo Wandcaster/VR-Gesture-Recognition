@@ -30,7 +30,7 @@ namespace VRGesureRecognition
             boldValue= (pointsData.expectedSize.x+pointsData.expectedSize.y)/30;
             output = BoldLines(output);
             output = ScaleTexture(output, targetTextureSize.x, targetTextureSize.y);
-            if (Player.instance.bodyDirectionGuess.x > Player.instance.bodyDirectionGuess.z) output = FlipTexture(output);
+            //if (Player.instance.bodyDirectionGuess.x > Player.instance.bodyDirectionGuess.z) output = FlipTexture(output);
             return output;
         }
         protected override Texture2D BoldLines(Texture2D texture)
