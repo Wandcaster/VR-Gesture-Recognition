@@ -14,6 +14,8 @@ public class KeyController : VRUI
     InputSimulator inputSimulator;
     [SerializeField]
     WindowsInput.Native.VirtualKeyCode Key;
+    [SerializeField]
+    private float freq;
     private void Start()
     {
         text.text = name;
@@ -28,7 +30,7 @@ public class KeyController : VRUI
         background.color = Color.gray;
         inputSimulator.Keyboard.KeyDown(Key);
         //if(other.GetComponent<HandCollider>().hand.hand.handType==)
-        SteamVR_Actions.default_Haptic[other.attachedRigidbody.GetComponent<HandCollider>().hand.hand.handType].Execute(0.5F, 0.5F,320,0.3F);
+        SteamVR_Actions.default_Haptic[other.attachedRigidbody.GetComponent<HandCollider>().hand.hand.handType].Execute(0, 0.07F, freq, 0.3F);
     }
     private void OnTriggerExit(Collider other)
     {
