@@ -5,7 +5,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "VRGestureRecognition",
-        "OpenCV"
+        "OpenCV",
+        "SteamVR"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

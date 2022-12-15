@@ -25,7 +25,7 @@ namespace VRGesureRecognition
         [Tooltip("Recognize vector gestures")]
         [SerializeField] private VectorGestureRecognizer vectorGestureRecognizer;
         [Tooltip("Object that position is traced, for example finger tip or wand tip")]
-        [SerializeField] private TrailRenderer trackedPoint;
+        public TrailRenderer trackedPoint;
         private UIController gestureUIController;
         [Header("Key configuration")]
         [Tooltip("Button for trigger start collecting point on pressDown and start recognizing on pressUp")]
@@ -39,6 +39,8 @@ namespace VRGesureRecognition
         public OnRecognition OnRecognition;
         [Tooltip("Event trigger when gesture is created")]
         public OnCreateGesture OnCreateGesture = new OnCreateGesture();
+        [Tooltip("If is false than recognition is stopped")]
+        public bool isEnabled;
 
         private Vector3[] positions;
         [HideInInspector]
@@ -72,19 +74,26 @@ namespace VRGesureRecognition
         }
         private void Update()
         {
+            if (!isEnabled) return;
             if (isRecording.lastStateDown && gestureDatabase != null)
             {
                 StartTrialRenderer();
             }
             if (isRecording.lastStateUp)
             {
-                positions = new Vector3[trackedPoint.positionCount];
-                trackedPoint.GetPositions(positions);
-
-                if (gestureDatabase as ImageGestureDatabase != null) ImageMode(positions);
-                else VectorMode(positions);
+                Recognize();
             }
         }
+
+        public void Recognize()
+        {
+            positions = new Vector3[trackedPoint.positionCount];
+            trackedPoint.GetPositions(positions);
+
+            if (gestureDatabase as ImageGestureDatabase != null) ImageMode(positions);
+            else VectorMode(positions);
+        }
+
         private void VectorMode(Vector3[] positions)
         {
             StopTrialRenderer();
@@ -108,7 +117,7 @@ namespace VRGesureRecognition
             trackedPoint.Clear();
             trackedPoint.emitting = false;
         }
-        private void StartTrialRenderer()
+        public void StartTrialRenderer()
         {
             trackedPoint.Clear();
             trackedPoint.time = 1000;
@@ -124,21 +133,7 @@ namespace VRGesureRecognition
                 item.gestureID = i++;
             }
         }
-        Vector2[] LeftRotate(Vector2[] arr,int position)
-        {
-            int k = 0;
-            while (k < position)
-            {
-                Vector2 x = arr[0];
-                for (int i = 0; i < (arr.Length - 1); i++)
-                {
-                    arr[i] = arr[i + 1];
-                }
-                arr[(arr.Length - 1)] = x;
-                k++;
-            }
-            return arr;
-        }
+        
         private Vector2[] TransformPoints(Vector3[] points)
         {
             Vector2[] output = new Vector2[points.Length];

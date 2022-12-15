@@ -47,12 +47,11 @@ namespace VRGesureRecognition
         TextMeshProUGUI RecognizedGestureName;
         private GameObject tempCreateDatabasePopup;
         [SerializeField]
-        Texture2D noVisualisationOfGesture;
-        [SerializeField]
         private LineRenderer vectorGestureLine;
         [SerializeField]
-        private float tolerance;
-
+        private LineRenderer vectorGestureLineInTestingWindow;
+        [SerializeField]
+        private TextMeshProUGUI propabilityText;
         int currentIdInInspectMode;
 
         private void ClearUI()
@@ -179,14 +178,13 @@ namespace VRGesureRecognition
             {
                 VectorGesture vectorGesture = (VectorGesture)gesture;
                 tempGesture = vectorGesture;
-                VectorVisualization(vectorGesture);
+                VectorVisualization(vectorGesture,createModeImage.transform.position,vectorGestureLine);//new Vector2(1.875F, 0.816F)
             }
         }
-        private void VectorVisualization(VectorGesture gesture)
+        private void VectorVisualization(VectorGesture gesture, Vector2 position,LineRenderer lineRenderer)
         {
-            vectorGestureLine.positionCount = gesture.vectors.Length;
+            lineRenderer.positionCount = gesture.vectors.Length;
             List<Vector2> points = new List<Vector2>();
-            Vector2 offset = new Vector2(1.875F, 0.816F);
             foreach (var item in gesture.vectors)
             {
                 points.Add(points.LastOrDefault() + (item * GestureManager.Instance.pointDistanceOnVector));
@@ -194,9 +192,9 @@ namespace VRGesureRecognition
             List<Vector3> output = new List<Vector3>();
             for (int i = 0; i < points.Count; i++)
             {
-                output.Add(points[i] + offset);
+                output.Add(points[i] + position);
             }
-            vectorGestureLine.SetPositions(output.ToArray());
+            lineRenderer.SetPositions(output.ToArray());
         }
         private void LoadToInspectDatabasePanel(int idChangeValue)
         {
@@ -220,7 +218,7 @@ namespace VRGesureRecognition
                 VectorGesture gesture = (VectorGesture)GestureManager.Instance.gestureDatabase.gestures[currentIdInInspectMode];
                 inspectModeGestureName.text = gesture.gestureName;
                 currentIdInInspectModeText.text = currentIdInInspectMode.ToString();
-                inspectModeImage.texture = noVisualisationOfGesture;
+                VectorVisualization(gesture, inspectModeImage.transform.position, vectorGestureLine);
 
             }
         }
@@ -239,6 +237,7 @@ namespace VRGesureRecognition
                 DrawedGestureName.text = imageGesture.gestureName;
                 DrawedGestureImage.texture = imageGesture.gestureImage;
                 Debug.Log("Propability:" + output[0].probability);
+                propabilityText.text = output[0].probability.ToString() ;
             }
             else if (type.value == 2)
             {
@@ -246,9 +245,10 @@ namespace VRGesureRecognition
                 VectorGesture gestureWithTheHighestProbability = (VectorGesture)output[0].recognizedGesture;
 
                 RecognizedGestureName.text = gestureWithTheHighestProbability.gestureName;
-                RecognizedGestureImage.texture = noVisualisationOfGesture;
+                propabilityText.text = output[0].probability.ToString();
 
-                DrawedGestureImage.texture = noVisualisationOfGesture;
+                VectorVisualization(vectorGesture, DrawedGestureImage.transform.position, vectorGestureLine);
+                VectorVisualization(gestureWithTheHighestProbability,RecognizedGestureImage.transform.position,vectorGestureLineInTestingWindow);
                 Debug.Log("Propability:" + output[0].probability);
             }
         }

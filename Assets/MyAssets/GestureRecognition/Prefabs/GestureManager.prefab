@@ -50,12 +50,10 @@ MonoBehaviour:
   imageGestureRecognizer: {fileID: 193630768373768202}
   vectorGestureRecognizer: {fileID: 1833145584931633475}
   trackedPoint: {fileID: 0}
-  gestureUIController: {fileID: 0}
   isRecording:
     actionPath: /actions/default/in/RecordingGesture
     needsReinit: 0
-  gestureDatabase: {fileID: 0}
-  gestureType: 0
+  gestureDatabase: {fileID: 11400000, guid: f23a6725f88d4284199e7bf864aa2af9, type: 2}
   OnRecognition:
     m_PersistentCalls:
       m_Calls:
@@ -70,7 +68,9 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 0
+  pointDistanceOnImage: 0.004
+  pointDistanceOnVector: 0.01
 --- !u!114 &193630768373768202
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,5 +108,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boldValue: 10
-  targetWidth: 200
-  targetHeight: 200
+  targetTextureSize: {x: 200, y: 200}
