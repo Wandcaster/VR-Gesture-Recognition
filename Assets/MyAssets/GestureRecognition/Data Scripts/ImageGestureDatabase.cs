@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 namespace VRGesureRecognition
 {
@@ -9,6 +11,7 @@ namespace VRGesureRecognition
     {
         public override void InitGestureDatabase()
         {
+#if UNITY_EDITOR
             gestures.Clear();
             string path = AssetDatabase.GetAssetPath(this);
             path = path.Remove(path.Length - databaseName.Length - 6, databaseName.Length + 6);
@@ -18,6 +21,7 @@ namespace VRGesureRecognition
                 path = path.Remove(0, 17);
                 gestures.Add(new ImageGesture(Resources.Load<ImageGestureData>(path)));
             }
+#endif
         }
     }
 }

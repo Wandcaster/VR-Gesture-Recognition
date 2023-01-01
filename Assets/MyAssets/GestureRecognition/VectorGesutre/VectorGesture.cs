@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 namespace VRGesureRecognition
 {
@@ -93,6 +95,7 @@ namespace VRGesureRecognition
         }
         public override void Save(string path)
         {
+#if UNITY_EDITOR
             path += "/" + gestureName;
             Directory.CreateDirectory(path);
             VectorGestureData temp = ScriptableObject.CreateInstance<VectorGestureData>();
@@ -100,6 +103,7 @@ namespace VRGesureRecognition
             AssetDatabase.CreateAsset(temp, path + "/" + gestureName + ".asset");
             //EditorUtility.FocusProjectWindow();
             Selection.activeObject = temp;
+#endif
         }
     }
 }

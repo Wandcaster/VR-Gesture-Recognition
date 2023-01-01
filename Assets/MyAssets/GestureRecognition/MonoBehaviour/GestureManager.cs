@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
@@ -63,6 +65,7 @@ namespace VRGesureRecognition
                 Material material = new Material(Shader.Find("Transparent/Diffuse"));
                 trackedPoint.material = material;
             }
+            StopTrialRenderer();
         }
         private void InitDatabases()
         {
@@ -99,7 +102,7 @@ namespace VRGesureRecognition
             StopTrialRenderer();
             VectorGesture gesture = new VectorGesture("Gesture", TransformPoints(positions));
             OnCreateGesture.Invoke(gesture);
-            OnRecognition.Invoke(RecognizeGesture(gesture));
+            if(gestureDatabase.gestures.Count>1) OnRecognition.Invoke(RecognizeGesture(gesture));
         }
         private void ImageMode(Vector3[] positions)
         {
@@ -139,6 +142,7 @@ namespace VRGesureRecognition
             Vector2[] output = new Vector2[points.Length];
             Vector3 startPos = points[0];
             Vector3 bodyDirection = trackedPoint.transform.forward;
+            Debug.Log(bodyDirection);
             bodyDirection.y = 0;
             
             for (int i = 0; i < points.Length; i++)
@@ -224,6 +228,7 @@ namespace VRGesureRecognition
         /// <param name="type">Type of gesture that database stores</param>
         public void CreateDatabase(string name, GestureType type)
         {
+#if UNITY_EDITOR
             if (name.Length == 0) return;
             if (type == GestureType.ImageGesture)//ImageType
             {
@@ -241,6 +246,7 @@ namespace VRGesureRecognition
                 AssetDatabase.CreateAsset(temp, savePath + "/" + name + "/" + name + ".asset");
                 gestureUIController.InitGestureDatabaseDropdown();
             }
+#endif
         }
         /// <summary>
         /// Compare all gesture stored in database

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace VRGesureRecognition
@@ -37,6 +39,7 @@ namespace VRGesureRecognition
         /// <param name="path">Path to gesture database folder</param>
         public override void Save(string path)
         {
+#if UNITY_EDITOR
             path += "/" + gestureName;
             Directory.CreateDirectory(path);
             SaveImage(path);
@@ -45,6 +48,7 @@ namespace VRGesureRecognition
             AssetDatabase.CreateAsset(temp, path + "/" + gestureName + ".asset");
             //EditorUtility.FocusProjectWindow();
             Selection.activeObject = imageGestureData;
+#endif
         }
         /// <summary>
         /// Save gesture image to file
@@ -52,6 +56,7 @@ namespace VRGesureRecognition
         /// <param name="path">Path to gesture database folder</param>
         private void SaveImage(string path)
         {
+#if UNITY_EDITOR
             byte[] bytes = ImageConversion.EncodeArrayToPNG(gestureImage.GetRawTextureData(), gestureImage.graphicsFormat, (uint)gestureImage.width, (uint)gestureImage.height);
             path = path + "/" + gestureName + ".png";
             File.WriteAllBytes(path, bytes);
@@ -66,6 +71,7 @@ namespace VRGesureRecognition
             path = path.Remove(path.Length - 4, 4);
             gestureImage = Resources.Load<Texture2D>(path);
             Debug.Log(path);
+#endif
         }
         /// <summary>
         /// Create ImageGesture from data
