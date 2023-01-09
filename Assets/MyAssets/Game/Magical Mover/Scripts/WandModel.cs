@@ -10,4 +10,5 @@ public class WandModel : MonoBehaviour
     public List<Collider> colliders = new List<Collider>();
     public Vector3 rateOfChangePosition;
     public Transform tip;
+    public AudioSource audioSource;
 }

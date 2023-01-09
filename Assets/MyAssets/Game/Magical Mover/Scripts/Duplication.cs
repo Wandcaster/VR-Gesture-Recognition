@@ -8,14 +8,17 @@ public class Duplication : MonoBehaviour
     [SerializeField] private string gestureName;
     [SerializeField] private WandModel wandModel;
     [SerializeField] private float recognitionThreshold;
-
-    public void OnRecognition(List<RecognizeOutput> recognizeOutputs)
+    [SerializeField] private Vector3 positionOffset;
+    public bool CastDupliaction(List<RecognizeOutput> recognizeOutputs)
     {
-        Debug.Log(recognizeOutputs[0].recognizedGesture.gestureName);
-        if (recognizeOutputs[0].recognizedGesture.gestureName.Equals(gestureName) && recognizeOutputs[0].probability < recognitionThreshold)
+       if (recognizeOutputs[0].recognizedGesture.gestureName.Equals(gestureName) && recognizeOutputs[0].probability < recognitionThreshold)
         {
-            GameObject temp=Instantiate(wandModel.colliders[0].gameObject );
+            Transform target = wandModel.colliders[0].transform;
+            GameObject temp=Instantiate(wandModel.colliders[0].gameObject,positionOffset+ target.transform.position, target.transform.rotation );
+            temp.transform.localScale = target.lossyScale;
             Destroy(temp.gameObject.GetComponent<ConfigurableJoint>());
+            return true;
         }
+        return false;
     }
 }

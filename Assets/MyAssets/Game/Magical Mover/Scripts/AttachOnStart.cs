@@ -22,7 +22,7 @@ public class AttachOnStart : MonoBehaviour
             {
 
                 target.SetActive(true);
-                hand.AttachObject(target, GrabTypes.Scripted,attachmentOffset:attachOffset);
+                hand.AttachObject(target, GrabTypes.Grip,attachmentOffset:attachOffset);
                 // If the player's scale has been changed the object to attach will be the wrong size.
                 // To fix this we change the object's scale back to its original, pre-attach scale.
                 target.transform.localScale = target.transform.localScale;

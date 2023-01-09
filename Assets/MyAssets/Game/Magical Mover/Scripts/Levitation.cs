@@ -10,9 +10,9 @@ public class Levitation : MonoBehaviour
     public float upwardForce = -0.12f; // Adjust this value to control the average upward force
     public float forceVariance = 2.67f; // Adjust this value to control the range of random forces
     public float wandMultiplier;
-    [SerializeField] private string gestureName;
+    [SerializeField] public string gestureName;
     private Rigidbody rb;
-    [SerializeField] private WandModel wandModel;
+    public WandModel wandModel;
     bool isActive;
     [SerializeField] private float recognitionThreshold;
     [SerializeField] private SteamVR_Action_Single spellForce;
@@ -45,14 +45,15 @@ public class Levitation : MonoBehaviour
             rb.AddForce(-rb.velocity / 100);
         }
     }
-    public void OnRecognition(List<RecognizeOutput>recognizeOutputs)
+    public bool CastLevitation(List<RecognizeOutput>recognizeOutputs)
     {
-        Debug.Log(recognizeOutputs[0].recognizedGesture.gestureName);
         if (recognizeOutputs[0].recognizedGesture.gestureName.Equals(gestureName) && recognizeOutputs[0].probability< recognitionThreshold)
         {
             if (isActive) Deactive();
             else Active();
+            return true;
         }
+        return false;
     }
 
 }
