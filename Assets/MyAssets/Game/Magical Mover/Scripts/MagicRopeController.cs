@@ -91,6 +91,7 @@
         {
             while(true)
             {
+            if (object1 == null) break;
                 lineRenderer.positionCount = 2;
                 lineRenderer.SetPosition(0, object1.transform.position);
                 lineRenderer.SetPosition(1, wandModel.tip.position);
