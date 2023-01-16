@@ -31,7 +31,7 @@ namespace VRGesureRecognition
         private UIController gestureUIController;
         [Header("Key configuration")]
         [Tooltip("Button for trigger start collecting point on pressDown and start recognizing on pressUp")]
-        [SerializeField] private SteamVR_Action_Boolean isRecording;
+        public SteamVR_Action_Boolean isRecording;
         [Header("Data")]
         private string savePath = "Assets/Resources/SavedGestures"; //path to folder with gestureDatabases
         [Tooltip("Database that contain gestures")]
@@ -55,6 +55,7 @@ namespace VRGesureRecognition
             InitDatabases();
             InitTrialRenderer();
             gestureUIController = FindObjectOfType<UIController>();
+            Debug.Log("Iloœæ gestów" + gestureDatabase.gestures.Count);
         }
         private void InitTrialRenderer()
         {

@@ -13,13 +13,19 @@ namespace VRGesureRecognition
         {
 #if UNITY_EDITOR
             gestures.Clear();
-            string path = AssetDatabase.GetAssetPath(this);
+            string path = AssetDatabase.GetAssetPath(this);//Replace
             path = path.Remove(path.Length - databaseName.Length - 6, databaseName.Length + 6);
             foreach (var item in Directory.GetDirectories(path))
             {
                 path = Directory.GetFiles(item)[0].Remove(Directory.GetFiles(item)[0].Length - 6, 6);
                 path = path.Remove(0, 17);
                 gestures.Add(new VectorGesture(Resources.Load<VectorGestureData>(path)));
+            }
+#endif
+#if PLATFORM_STANDALONE_WIN
+            for (int i = 0; i < gestures.Count; i++)
+            {
+                gestures[i] = new VectorGesture((VectorGestureData)gestures[i].gestureData);
             }
 #endif
         }

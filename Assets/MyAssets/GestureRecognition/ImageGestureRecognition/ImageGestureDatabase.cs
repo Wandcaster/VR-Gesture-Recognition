@@ -22,6 +22,12 @@ namespace VRGesureRecognition
                 gestures.Add(new ImageGesture(Resources.Load<ImageGestureData>(path)));
             }
 #endif
+#if PLATFORM_STANDALONE_WIN
+            for (int i = 0; i < gestures.Count; i++)
+            {
+                gestures[i] = new ImageGesture((ImageGestureData)gestures[i].gestureData);
+            }
+#endif
         }
     }
 }
