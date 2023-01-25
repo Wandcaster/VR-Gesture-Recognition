@@ -55,7 +55,6 @@ namespace VRGesureRecognition
             InitDatabases();
             InitTrialRenderer();
             gestureUIController = FindObjectOfType<UIController>();
-            Debug.Log("Iloœæ gestów" + gestureDatabase.gestures.Count);
         }
         private void InitTrialRenderer()
         {
@@ -143,7 +142,6 @@ namespace VRGesureRecognition
             Vector2[] output = new Vector2[points.Length];
             Vector3 startPos = points[0];
             Vector3 bodyDirection = trackedPoint.transform.forward;
-            Debug.Log(bodyDirection);
             bodyDirection.y = 0;
             
             for (int i = 0; i < points.Length; i++)

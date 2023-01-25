@@ -18,7 +18,7 @@ public class TestWithAnimator
     }
     [UnityTest]
     [RequiresPlayMode]
-    public IEnumerator GetureRecognitionTest()
+    public IEnumerator GetureRecognitionTest([ValueSource("GesturePath")] int data)
     {
         GestureManager gestureManager = GameObject.Find("GestureManager").GetComponent<GestureManager>();
         gestureManager.isEnabled= true;
@@ -32,5 +32,12 @@ public class TestWithAnimator
         }
         gestureManager.Recognize();
         yield return null;
+    }
+    private static IEnumerable GesturePath()
+    {
+        for (int i = 0; i < 30; i++)
+        {
+            yield return null;
+        }
     }
 }

@@ -6,8 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/MyAssets/Game/Magic Mover v2/Scenes/MagicalMover.unity
+    path: Assets/MyAssets/Game/Magic Mover/Scenes/MagicalMover.unity
     guid: cc03fa3a0a45d92448c9e4358df7f837
+  - enabled: 1
+    path: Assets/MyAssets/Game/New Magic Duplicate/Scenes/MagicDuplicate.unity
+    guid: f72fa42f1730d6443ad41bc61509dce7
+  - enabled: 0
+    path: Assets/MyAssets/GestureRecognition/Tests/Test.unity
+    guid: a671e35aef8b87046ba631a987dfe32f
   m_configObjects:
     Unity.XR.OpenVR.Settings: {fileID: 11400000, guid: 456f9e6f998b4284489c6404ce7d5278, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 9ee7cd15e0619b44c9f09d2f8c574562, type: 2}

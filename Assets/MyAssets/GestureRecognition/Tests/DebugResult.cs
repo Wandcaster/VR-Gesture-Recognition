@@ -8,9 +8,9 @@ public class DebugResult : MonoBehaviour
 
     public void OnRecognition(List<RecognizeOutput> outputs)
     {
-        foreach (var item in outputs)
-        {
-            Debug.Log(item.recognizedGesture.gestureName + ": " + item.probability);
-        }
+        //foreach (var item in outputs)
+        //{
+        //    Debug.Log(item.recognizedGesture.gestureName + ": " + item.probability);
+        //}
     }
 }
