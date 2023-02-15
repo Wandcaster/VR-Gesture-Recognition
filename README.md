@@ -25,7 +25,7 @@ The system allows you to create and save specific gestures and assign any action
 8. Save gesture by press button.
 9. Repeat 6-8 step to add more gesture.
 10. Change mode to Test and test gesture.
-## Configurate gesture GestureManager component
+## Configurate GestureManager component
 1. Add GestureManager prefab to scene.
 2. Set key that start drawing gesture.
 3. Add Trail Renderer to traced point(For example hand).
