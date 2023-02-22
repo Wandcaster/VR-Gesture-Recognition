@@ -9,9 +9,9 @@ using Valve.VR.Extras;
 [RequireComponent(typeof(BoxCollider))]
 public class ButtonForVR : VRUI
 {
-    public override void OnClick(PointerEventArgs e)
+    public override void OnClick(object sender, PointerEventArgs e)
     {
-        Debug.Log(e.target.name);
+        if (e.target != gameObject.transform) return;
         GetComponent<Button>().onClick.Invoke();
     }
 }

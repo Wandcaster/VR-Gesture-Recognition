@@ -4,10 +4,7 @@ using System.Collections;
 
 namespace Valve.VR.Extras
 {
-    public interface IOnClick
-    {
-        void OnClick(PointerEventArgs e);
-    }
+
 
     public class SteamVR_LaserPointer : MonoBehaviour
     {
@@ -86,7 +83,7 @@ namespace Valve.VR.Extras
             {
                 PointerClick(this, e);
             }
-            if (e.target!=null && e.target.GetComponent<IOnClick>() != null) e.target.GetComponent<IOnClick>().OnClick(e);
+            //if (e.target!=null && e.target.GetComponent<IOnClick>() != null) e.target.GetComponent<IOnClick>().OnClick(e);
         }
 
         public virtual void OnPointerOut(PointerEventArgs e)

@@ -2,14 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR.Extras;
-
 [RequireComponent(typeof(BoxCollider))]
-public class VRUI :MonoBehaviour,IOnClick
+public class VRUI :MonoBehaviour, IOnClick
 {
+    private SteamVR_LaserPointer steamVR_Laser;
     public void Awake()
     {
         GetComponent<BoxCollider>().size = Vector3.zero;
         StartCoroutine(SetColliderSize());
+    }
+    private void Start()
+    {
+        steamVR_Laser = FindObjectOfType<SteamVR_LaserPointer>();
+        steamVR_Laser.PointerClick += OnClick;
     }
     private IEnumerator SetColliderSize()
     {
@@ -23,8 +28,12 @@ public class VRUI :MonoBehaviour,IOnClick
         yield return true;
     }
 
-    public virtual void OnClick(PointerEventArgs e)
+    public virtual void OnClick(object sender,PointerEventArgs e)
     {
         throw new System.NotImplementedException();
+    }
+    private void OnDestroy()
+    {
+        if(steamVR_Laser != null) steamVR_Laser.PointerClick -= OnClick;
     }
 }

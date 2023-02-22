@@ -7,9 +7,9 @@ using Valve.VR.Extras;
 
 public class DropDownForVR : VRUI
 {
-    public override void OnClick(PointerEventArgs e)
+    public override void OnClick(object sender, PointerEventArgs e)
     {
-        Debug.Log("Dropdown");
+        if (e.target != gameObject.transform) return;
         GetComponent<IPointerClickHandler>().OnPointerClick(new PointerEventData(EventSystem.current));
         foreach (var item in GetComponentsInChildren<Toggle>())
         {

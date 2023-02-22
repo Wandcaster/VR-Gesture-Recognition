@@ -7,8 +7,9 @@ using Valve.VR.Extras;
 
 public class ToggleForVR : VRUI
 {
-    public override void OnClick(PointerEventArgs e)
+    public override void OnClick(object sender, PointerEventArgs e)
     {
+        if (e.target != gameObject.transform) return;
         GetComponent<IPointerClickHandler>().OnPointerClick(new PointerEventData(EventSystem.current));
     }
 }

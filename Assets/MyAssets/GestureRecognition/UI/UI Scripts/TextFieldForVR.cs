@@ -7,8 +7,9 @@ using Valve.VR.Extras;
 [RequireComponent(typeof(BoxCollider))]
 public class TextFieldForVR : VRUI
 {
-    public override void OnClick(PointerEventArgs e)
+    public override void OnClick(object sender, PointerEventArgs e)
     {
+        if (e.target != gameObject.transform) return;
         Debug.Log(e.target.name);
         GetComponent<TMP_InputField>().Select();
     }
