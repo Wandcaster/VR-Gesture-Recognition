@@ -18,10 +18,10 @@ public class VRUI :MonoBehaviour, IOnClick
     }
     private IEnumerator SetColliderSize()
     {
-        while (GetComponent<BoxCollider>().size.x == 0 || GetComponent<BoxCollider>().size.y == 0)
+        BoxCollider boxCollider = GetComponent<BoxCollider>();
+        while (boxCollider.size.x == 0 || boxCollider.size.y == 0)
         {
             Vector2 reactSize = GetComponent<RectTransform>().rect.size;
-            BoxCollider boxCollider = GetComponent<BoxCollider>();
             boxCollider.size = new Vector3(reactSize.x, reactSize.y, 0);
             yield return true;
         }

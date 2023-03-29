@@ -3090,9 +3090,9 @@ MonoBehaviour:
     m_Options:
     - m_Text: None
       m_Image: {fileID: 0}
-    - m_Text: Image
+    - m_Text: Static
       m_Image: {fileID: 0}
-    - m_Text: Vector
+    - m_Text: Dynamic
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
